@@ -17,16 +17,14 @@ abstract class BaseMessage(
             from: User?,
             chat: Chat,
             date: Date = Date(),
-            type: MessageType = MessageType.TEXT,
+            type: String = "text",
             payload: Any?
         ): BaseMessage {
             lastId++
             return when (type) {
-                MessageType.IMAGE -> ImageMessage("$lastId", from, chat, date = date, image = payload as String)
-                MessageType.TEXT -> TextMessage("$lastId", from, chat, date = date, text = payload as String)
+                "image" -> ImageMessage("$lastId", from, chat, date = date, image = payload as String)
+                else -> TextMessage("$lastId", from, chat, date = date, text = payload as String)
             }
         }
     }
 }
-
-enum class MessageType { TEXT, IMAGE }
