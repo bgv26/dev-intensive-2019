@@ -22,9 +22,6 @@ local.properties
 # User-specific configurations
 *.iml
 
-# Local configuration file (sdk path, etc)
-local.properties
-
 # Log Files
 *.log
 
@@ -43,9 +40,6 @@ captures/
 google-services.json
 
 # Version control
-<<<<<<< HEAD
-vcs.xml
-=======
 vcs.xml
 
 # lint
@@ -54,4 +48,11 @@ lint/generated/
 lint/outputs/
 lint/tmp/
 lint/reports/
->>>>>>> conflict
+
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
