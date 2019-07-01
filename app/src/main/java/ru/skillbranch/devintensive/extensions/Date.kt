@@ -44,18 +44,18 @@ fun Date.humanizeDiff(date: Date = Date()): String {
 private fun plurals(diff: Long, isPast: Boolean, units: TimeUnits): String {
     val remainder = diff % 10
     val quotient = diff / 10
-    val plurals: HashMap<TimeUnits, HashMap<String, String>> = hashMapOf(
-        TimeUnits.MINUTE to hashMapOf(
+    val plurals: Map<TimeUnits, Map<String, String>> = mapOf(
+        TimeUnits.MINUTE to mapOf(
             "FEW" to "минуты",
             "ONE" to "минуту",
             "MANY" to "минут"
         ),
-        TimeUnits.HOUR to hashMapOf(
+        TimeUnits.HOUR to mapOf(
             "FEW" to "часа",
             "ONE" to "час",
             "MANY" to "часов"
         ),
-        TimeUnits.DAY to hashMapOf(
+        TimeUnits.DAY to mapOf(
             "FEW" to "дня",
             "ONE" to "день",
             "MANY" to "дней"
