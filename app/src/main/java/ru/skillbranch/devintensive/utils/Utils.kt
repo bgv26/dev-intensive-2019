@@ -14,8 +14,7 @@ object Utils {
     }
 
     fun transliteration(payload: String, divider: String = " "): String {
-        var outString = ""
-        payload.forEach {
+        return payload.map {
             val isUpper = it.isUpperCase()
             val transLetter = when (it.toLowerCase()) {
                 'а' -> "a"
@@ -49,9 +48,8 @@ object Utils {
                 ' ' -> divider
                 else -> "$it"
             }
-            outString += if (isUpper) transLetter.capitalize() else transLetter
-        }
-        return outString
+            if (isUpper) transLetter.capitalize() else transLetter
+        }.joinToString("")
     }
 
     fun toInitials(firstName: String?, lastName: String?): String? {

@@ -85,12 +85,12 @@ class ExampleUnitTest {
         val chat = Chat("0")
         var date = Date()
         assertEquals(
-            "id:0 Василий отправил текст \"any text message\" только что",
+            "Василий отправил сообщение \"any text message\" только что",
             BaseMessage.makeMessage(user, chat, date, "text", "any text message").formatMessage()
         )
         date = Date().add(-2, TimeUnits.HOUR)
         assertEquals(
-            "id:1 Василий получил изображение \"https://anyurl.com\" 2 часа назад",
+            "Василий получил изображение \"https://anyurl.com\" 2 часа назад",
             BaseMessage.makeMessage(user, chat, date, "image", "https://anyurl.com", true).formatMessage()
         )
     }
