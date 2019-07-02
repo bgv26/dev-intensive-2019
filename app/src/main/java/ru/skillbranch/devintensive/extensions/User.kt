@@ -6,7 +6,10 @@ import ru.skillbranch.devintensive.utils.Utils
 
 fun User.toUserView(): UserView {
     val nickName = Utils.transliteration(fullName())
-    val status = if (lastVisit == null) "Еще не разу не был" else if (isOnline) "online" else "Последний раз был ${lastVisit?.humanizeDiff()}"
+    val status =
+        if (lastVisit == null) "Еще не разу не был"
+        else if (isOnline) "online"
+        else "Последний раз был ${lastVisit?.humanizeDiff()}"
     val initials = Utils.toInitials(firstName, lastName)
 
     return UserView(
@@ -19,9 +22,6 @@ fun User.toUserView(): UserView {
     )
 }
 
-fun User.fullName(): String {
-    return "$firstName $lastName"
-}
-
+fun User.fullName() = "$firstName $lastName"
 
 
