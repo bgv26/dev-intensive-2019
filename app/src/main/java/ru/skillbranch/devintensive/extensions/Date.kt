@@ -2,6 +2,7 @@ package ru.skillbranch.devintensive.extensions
 
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.abs
 
 const val SECOND = 1000L
 const val MINUTE = 60 * SECOND
@@ -25,53 +26,41 @@ fun Date.add(value: Int, units: TimeUnits = TimeUnits.SECOND): Date {
 
 fun Date.humanizeDiff(date: Date = Date()): String {
     val diff = date.time - this.time
-    val absDiff = Math.abs(diff)
+    val absDiff = abs(diff)
     val isPast = diff > 0
 
     return when {
         absDiff / SECOND <= 1 -> "только что"
-        absDiff / SECOND <= 45 -> if (diff > 0) "несколько секунд назад" else "через несколько секунд"
-        absDiff / SECOND <= 75 -> if (diff > 0) "минуту назад" else "через минуту"
-        absDiff / MINUTE <= 45 -> plurals(absDiff / MINUTE, isPast, TimeUnits.MINUTE)
-        absDiff / MINUTE <= 75 -> if (diff > 0) "час назад" else "через час"
-        absDiff / HOUR <= 22 -> plurals(absDiff / HOUR, isPast, TimeUnits.HOUR)
-        absDiff / HOUR <= 26 -> if (diff > 0) "день назад" else "через день"
-        absDiff / DAY <= 360 -> plurals(absDiff / DAY, isPast, TimeUnits.DAY)
-        else -> if (diff > 0) "более года назад" else "более чем через год"
+        absDiff / SECOND <= 45 -> if (isPast) "несколько секунд назад" else "через несколько секунд"
+        absDiff / SECOND <= 75 -> if (isPast) "минуту назад" else "через минуту"
+        absDiff / MINUTE <= 45 -> if (isPast) "${TimeUnits.MINUTE.plural((absDiff / MINUTE).toInt())} назад"
+        else "через ${TimeUnits.MINUTE.plural((absDiff / MINUTE).toInt())}"
+        absDiff / MINUTE <= 75 -> if (isPast) "час назад" else "через час"
+        absDiff / HOUR <= 22 -> if (isPast) "${TimeUnits.HOUR.plural((absDiff / HOUR).toInt())} назад"
+        else "через ${TimeUnits.HOUR.plural((absDiff / HOUR).toInt())}"
+        absDiff / HOUR <= 26 -> if (isPast) "день назад" else "через день"
+        absDiff / DAY <= 360 -> if (isPast) "${TimeUnits.DAY.plural((absDiff / DAY).toInt())} назад"
+        else "через ${TimeUnits.DAY.plural((absDiff / DAY).toInt())}"
+        else -> if (isPast) "более года назад" else "более чем через год"
     }
 }
 
-private fun plurals(diff: Long, isPast: Boolean, units: TimeUnits): String {
-    val remainder = diff % 10
-    val quotient = diff / 10
-    val plurals: Map<TimeUnits, Map<String, String>> = mapOf(
-        TimeUnits.MINUTE to mapOf(
-            "FEW" to "минуты",
-            "ONE" to "минуту",
-            "MANY" to "минут"
-        ),
-        TimeUnits.HOUR to mapOf(
-            "FEW" to "часа",
-            "ONE" to "час",
-            "MANY" to "часов"
-        ),
-        TimeUnits.DAY to mapOf(
-            "FEW" to "дня",
-            "ONE" to "день",
-            "MANY" to "дней"
-        )
+fun TimeUnits.plural(value: Int): String {
+    val plurals: Map<TimeUnits, Triple<String, String, String>> = mapOf(
+        TimeUnits.SECOND to Triple("секунды", "секунду", "секунд"),
+        TimeUnits.MINUTE to Triple("минуты", "минуту", "минут"),
+        TimeUnits.HOUR to Triple("часа", "час", "часов"),
+        TimeUnits.DAY to Triple("дня", "день", "дней")
     )
 
+    val remainder = value % 10
+    var quotient = value / 10
+    while (quotient > 10) quotient /= 10
+
     return when {
-        (remainder in 2..4) && (quotient != 1L) ->
-            if (isPast) "$diff ${plurals[units]?.get("FEW")} назад"
-            else "через $diff ${plurals[units]?.get("FEW")}"
-        (remainder == 1L) && (quotient != 1L) ->
-            if (isPast) "$diff ${plurals[units]?.get("ONE")} назад"
-            else "через $diff ${plurals[units]?.get("ONE")}"
-        else ->
-            if (isPast) "$diff ${plurals[units]?.get("MANY")} назад"
-            else "через $diff ${plurals[units]?.get("MANY")}"
+        (remainder in 2..4) && (quotient != 1) -> "$value ${plurals[this]?.first}"
+        (remainder == 1) && (quotient != 1) -> "$value ${plurals[this]?.second}"
+        else -> "$value ${plurals[this]?.third}"
     }
 }
 

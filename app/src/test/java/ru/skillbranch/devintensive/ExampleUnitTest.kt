@@ -136,7 +136,7 @@ class ExampleUnitTest {
 
     @Test
     fun test_humanizeDiff() {
-        assertEquals("несколько секунд назад", Date().humanizeDiff(Date().add(-2, TimeUnits.SECOND)))
+        assertEquals("несколько секунд назад", Date().add(-2, TimeUnits.SECOND).humanizeDiff())
         assertEquals("2 часа назад", Date().add(-2, TimeUnits.HOUR).humanizeDiff())
         assertEquals("5 дней назад", Date().add(-5, TimeUnits.DAY).humanizeDiff())
         assertEquals("через 12 минут", Date().add(12, TimeUnits.MINUTE).humanizeDiff())
@@ -187,5 +187,14 @@ class ExampleUnitTest {
         assertEquals("через 5 дней", Date().add(5, TimeUnits.DAY).humanizeDiff())
         assertEquals("через 148 дней", Date().add(148, TimeUnits.DAY).humanizeDiff())
         assertEquals("более чем через год", Date().add(400, TimeUnits.DAY).humanizeDiff())
+    }
+
+    @Test
+    fun test_plural(){
+        assertEquals("1 секунду", TimeUnits.SECOND.plural(1))
+        assertEquals("4 минуты", TimeUnits.MINUTE.plural(4))
+        assertEquals("19 часов", TimeUnits.HOUR.plural(19))
+        assertEquals("222 дня", TimeUnits.DAY.plural(222))
+        assertEquals("112 дней", TimeUnits.DAY.plural(112))
     }
 }
