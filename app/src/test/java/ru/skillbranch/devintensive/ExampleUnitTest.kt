@@ -136,21 +136,9 @@ class ExampleUnitTest {
 
     @Test
     fun test_humanizeDiff() {
-        assertEquals("несколько секунд назад", Date().add(-2, TimeUnits.SECOND).humanizeDiff())
-        assertEquals("2 часа назад", Date().add(-2, TimeUnits.HOUR).humanizeDiff())
-        assertEquals("5 дней назад", Date().add(-5, TimeUnits.DAY).humanizeDiff())
-        assertEquals("через 12 минут", Date().add(12, TimeUnits.MINUTE).humanizeDiff())
-        assertEquals("через 21 минуту", Date().add(21, TimeUnits.MINUTE).humanizeDiff())
-        assertEquals("через 26 минут", Date().add(26, TimeUnits.MINUTE).humanizeDiff())
-        assertEquals("через 7 дней", Date().add(7, TimeUnits.DAY).humanizeDiff())
-        assertEquals("более года назад", Date().add(-400, TimeUnits.DAY).humanizeDiff())
-        assertEquals("более чем через год", Date().add(400, TimeUnits.DAY).humanizeDiff())
-    }
-
-    @Test
-    fun test_of_humanizeDiff_2() {
         // ----- Past -----
         assertEquals("только что", Date().add(-1, TimeUnits.SECOND).humanizeDiff())
+        assertEquals("несколько секунд назад", Date().add(-2, TimeUnits.SECOND).humanizeDiff())
         assertEquals("несколько секунд назад", Date().add(-45, TimeUnits.SECOND).humanizeDiff())
         assertEquals("минуту назад", Date().add(-46, TimeUnits.SECOND).humanizeDiff())
         assertEquals("1 минуту назад", Date().add(-76, TimeUnits.SECOND).humanizeDiff())
@@ -161,6 +149,7 @@ class ExampleUnitTest {
         assertEquals("час назад", Date().add(-1, TimeUnits.HOUR).humanizeDiff())
         assertEquals("1 час назад", Date().add(-76, TimeUnits.MINUTE).humanizeDiff())
         assertEquals("2 часа назад", Date().add(-120, TimeUnits.MINUTE).humanizeDiff())
+        assertEquals("2 часа назад", Date().add(-2, TimeUnits.HOUR).humanizeDiff())
         assertEquals("3 часа назад", Date().add(-3, TimeUnits.HOUR).humanizeDiff())
         assertEquals("4 часа назад", Date().add(-4, TimeUnits.HOUR).humanizeDiff())
         assertEquals("5 часов назад", Date().add(-5, TimeUnits.HOUR).humanizeDiff())
@@ -170,6 +159,7 @@ class ExampleUnitTest {
         assertEquals("5 дней назад", Date().add(-5, TimeUnits.DAY).humanizeDiff())
         assertEquals("360 дней назад", Date().add(-360, TimeUnits.DAY).humanizeDiff())
         assertEquals("более года назад", Date().add(-361, TimeUnits.DAY).humanizeDiff())
+        assertEquals("более года назад", Date().add(-400, TimeUnits.DAY).humanizeDiff())
 
         // ----- Future ------
         assertEquals("через несколько секунд", Date().add(2, TimeUnits.SECOND).humanizeDiff())
@@ -177,6 +167,9 @@ class ExampleUnitTest {
         assertEquals("через 2 минуты", Date().add(2, TimeUnits.MINUTE).humanizeDiff())
         assertEquals("через 3 минуты", Date().add(3, TimeUnits.MINUTE).humanizeDiff())
         assertEquals("через 5 минут", Date().add(5, TimeUnits.MINUTE).humanizeDiff())
+        assertEquals("через 12 минут", Date().add(12, TimeUnits.MINUTE).humanizeDiff())
+        assertEquals("через 21 минуту", Date().add(21, TimeUnits.MINUTE).humanizeDiff())
+        assertEquals("через 26 минут", Date().add(26, TimeUnits.MINUTE).humanizeDiff())
         assertEquals("через час", Date().add(1, TimeUnits.HOUR).humanizeDiff())
         assertEquals("через 2 часа", Date().add(2, TimeUnits.HOUR).humanizeDiff())
         assertEquals("через 3 часа", Date().add(3, TimeUnits.HOUR).humanizeDiff())
@@ -185,6 +178,7 @@ class ExampleUnitTest {
         assertEquals("через день", Date().add(1, TimeUnits.DAY).humanizeDiff())
         assertEquals("через 4 дня", Date().add(4, TimeUnits.DAY).humanizeDiff())
         assertEquals("через 5 дней", Date().add(5, TimeUnits.DAY).humanizeDiff())
+        assertEquals("через 7 дней", Date().add(7, TimeUnits.DAY).humanizeDiff())
         assertEquals("через 148 дней", Date().add(148, TimeUnits.DAY).humanizeDiff())
         assertEquals("более чем через год", Date().add(400, TimeUnits.DAY).humanizeDiff())
     }
@@ -200,26 +194,33 @@ class ExampleUnitTest {
 
     @Test
     fun test_truncate() {
+        /* skillBranch tests */
         assertEquals(
-            "Bender Bending Ro...",
+            "Bender Bending R...",
             "Bender Bending Rodriguez — дословно «Сгибальщик Сгибающий Родригес»".truncate()
         )
         assertEquals(
-            "Bender Bending R...",
+            "Bender Bending...",
             "Bender Bending Rodriguez — дословно «Сгибальщик Сгибающий Родригес»".truncate(15)
         )
         assertEquals("A", "A     ".truncate(3))
-        assertEquals("too lo...", "   too long line with lots of spaces before".truncate(5))
+
+        /* additional tests */
+        assertEquals("too lo...", "   too long line with lots of spaces before".truncate(6))
         assertEquals("too short", "too short".truncate(20))
-        assertEquals("12345", "12345".truncate(4))
-        assertEquals("1234...", "12345".truncate(3))
-        assertEquals("12345", "12345  ".truncate(4))
-        assertEquals("tab", "tab    ".truncate(4))
-        assertEquals("dots......", "dots... a lot".truncate(6))
+        assertEquals("12345", "12345".truncate(5))
+        assertEquals("1234...", "12345".truncate(4))
+        assertEquals("12345", "12345  ".truncate(5))
+        assertEquals("tab", "tab    ".truncate(5))
+        assertEquals("dots......", "dots... a lot".truncate(7))
+        assertEquals("abc", "abc    ".truncate(15))
+        assertEquals("123456...", "123456789".truncate(6))
+        assertEquals("123456789", "123456789".truncate(9))
     }
 
     @Test
     fun test_strip_html() {
+        /* skillBranch tests */
         assertEquals(
             "Образовательное IT-сообщество Skill Branch",
             "<p class=\"title\">Образовательное IT-сообщество Skill Branch</p>".stripHtml()
@@ -228,6 +229,8 @@ class ExampleUnitTest {
             "Образовательное IT-сообщество Skill Branch",
             "<p>Образовательное       IT-сообщество Skill Branch</p>".stripHtml()
         )
+
+        /* additional tests */
         assertEquals("single", "&amp;&lt;&gt;single&#39;&quot;".stripHtml())
         assertEquals("", "&amp;&lt;&gt;&#39;&quot;".stripHtml())
         assertEquals(" ", "&amp;&lt;&gt;    &#39;&quot;".stripHtml())
@@ -238,11 +241,11 @@ class ExampleUnitTest {
         assertEquals(" one two ", "  one   two ".stripHtml())
         assertEquals("null", "null".stripHtml())
         val longHtml = """
-           <TD valign="top" style="padding-bottom:15px;"> <b>line1<b> </TD>
-           <TD valign="top"> <span class="HeadTitleNews"> line2</span>
-           <img src='http://2011WaterpoloF.jpg' >
-           <div style="margin: 0in 0in 0pt">line3</div>
-       """.trimIndent()
+            <TD valign="top" style="padding-bottom:15px;"> <b>line1<b> </TD>
+            <TD valign="top"> <span class="HeadTitleNews"> line2</span>
+            <img src='http://2011WaterpoloF.jpg' >
+            <div style="margin: 0in 0in 0pt">line3</div>
+        """.trimIndent()
         assertEquals(" line1 \n line2\n\nline3", longHtml.stripHtml())
     }
 }
