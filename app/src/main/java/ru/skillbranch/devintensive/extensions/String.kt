@@ -8,13 +8,7 @@ fun String.truncate(len: Int = 16): String {
     }
 }
 
-fun String.stripHtml(): String =
-    """ +""".toRegex().split(
-        """&(#\d+?|\w+?);""".toRegex().replace(
-            """<.*?>""".toRegex().replace(
-                this,
-                ""
-            ),
-            ""
-        )
-    ).joinToString(" ")
+fun String.stripHtml(): String = this
+        .replace("""<.*?>""".toRegex(), "") // Remove HTML tags
+        .replace("""&(#\d+?|\w+?);""".toRegex(), "") // Remove HTML escape sequences
+        .split(""" +""".toRegex()).joinToString(" ") // Remove extra spaces
