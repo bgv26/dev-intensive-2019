@@ -45,25 +45,79 @@ fun Date.humanizeDiff(date: Date = Date()): String {
     }
 }
 
-fun TimeUnits.plural(value: Int): String {
-    val plurals: Map<TimeUnits, Triple<String, String, String>> = mapOf(
-        TimeUnits.SECOND to Triple("секунды", "секунду", "секунд"),
-        TimeUnits.MINUTE to Triple("минуты", "минуту", "минут"),
-        TimeUnits.HOUR to Triple("часа", "час", "часов"),
-        TimeUnits.DAY to Triple("дня", "день", "дней")
-    )
-
-    val remainder = value % 10
-    var quotient = value / 10
-    while (quotient > 10) quotient /= 10
-
-    return when {
-        (remainder in 2..4) && (quotient != 1) -> "$value ${plurals[this]?.first}"
-        (remainder == 1) && (quotient != 1) -> "$value ${plurals[this]?.second}"
-        else -> "$value ${plurals[this]?.third}"
-    }
-}
-
+//fun TimeUnits.plural(value: Int): String {
+//    val plurals: Map<TimeUnits, Triple<String, String, String>> = mapOf(
+//        TimeUnits.SECOND to Triple("секунды", "секунду", "секунд"),
+//        TimeUnits.MINUTE to Triple("минуты", "минуту", "минут"),
+//        TimeUnits.HOUR to Triple("часа", "час", "часов"),
+//        TimeUnits.DAY to Triple("дня", "день", "дней")
+//    )
+//
+//    val remainder = value % 10
+//    var quotient = value / 10
+//    while (quotient > 10) quotient /= 10
+//
+//    return when {
+//        (remainder in 2..4) && (quotient != 1) -> "$value ${plurals[this]?.first}"
+//        (remainder == 1) && (quotient != 1) -> "$value ${plurals[this]?.second}"
+//        else -> "$value ${plurals[this]?.third}"
+//    }
+//}
+//
 enum class TimeUnits {
-    SECOND, MINUTE, HOUR, DAY
+    SECOND {
+        override fun plural(value: Int): String {
+            val remainder = value % 10
+            var quotient = value / 10
+            while (quotient > 10) quotient /= 10
+
+            return when {
+                (remainder in 2..4) && (quotient != 1) -> "$value секунды"
+                (remainder == 1) && (quotient != 1) -> "$value секунду"
+                else -> "$value секунд"
+            }
+        }
+    },
+    MINUTE {
+        override fun plural(value: Int): String {
+            val remainder = value % 10
+            var quotient = value / 10
+            while (quotient > 10) quotient /= 10
+
+            return when {
+                (remainder in 2..4) && (quotient != 1) -> "$value минуты"
+                (remainder == 1) && (quotient != 1) -> "$value минуту"
+                else -> "$value минут"
+            }
+        }
+    },
+    HOUR {
+        override fun plural(value: Int): String {
+            val remainder = value % 10
+            var quotient = value / 10
+            while (quotient > 10) quotient /= 10
+
+            return when {
+                (remainder in 2..4) && (quotient != 1) -> "$value часа"
+                (remainder == 1) && (quotient != 1) -> "$value час"
+                else -> "$value часов"
+            }
+        }
+    },
+    DAY {
+        override fun plural(value: Int): String {
+            val remainder = value % 10
+            var quotient = value / 10
+            while (quotient > 10) quotient /= 10
+
+            return when {
+                (remainder in 2..4) && (quotient != 1) -> "$value дня"
+                (remainder == 1) && (quotient != 1) -> "$value день"
+                else -> "$value дней"
+            }
+        }
+
+    };
+
+    abstract fun plural(value: Int): String
 }
