@@ -190,11 +190,24 @@ class ExampleUnitTest {
     }
 
     @Test
-    fun test_plural(){
+    fun test_plural() {
         assertEquals("1 секунду", TimeUnits.SECOND.plural(1))
         assertEquals("4 минуты", TimeUnits.MINUTE.plural(4))
         assertEquals("19 часов", TimeUnits.HOUR.plural(19))
         assertEquals("222 дня", TimeUnits.DAY.plural(222))
         assertEquals("112 дней", TimeUnits.DAY.plural(112))
+    }
+
+    @Test
+    fun test_truncate() {
+        assertEquals("Bender Bending R...", "Bender Bending Rodriguez — дословно «Сгибальщик Сгибающий Родригес»".truncate())
+        assertEquals("Bender Bending...", "Bender Bending Rodriguez — дословно «Сгибальщик Сгибающий Родригес»".truncate(15))
+        assertEquals("A", "A     ".truncate(3))
+    }
+
+    @Test
+    fun test_strip_html() {
+        assertEquals("Образовательное IT-сообщество Skill Branch", "<p class=\"title\">Образовательное IT-сообщество Skill Branch</p>".stripHtml())
+        assertEquals("Образовательное IT-сообщество Skill Branch", "<p>Образовательное       IT-сообщество Skill Branch</p>".stripHtml())
     }
 }
