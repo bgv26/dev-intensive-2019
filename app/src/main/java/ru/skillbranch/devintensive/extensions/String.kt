@@ -9,4 +9,12 @@ fun String.truncate(len: Int = 16): String {
 }
 
 fun String.stripHtml(): String =
-    """\s+""".toRegex().split("""<.*?>""".toRegex().replace(this, "")).joinToString(" ")
+    """ +""".toRegex().split(
+        """&(#\d+?|\w+?);""".toRegex().replace(
+            """<.*?>""".toRegex().replace(
+                this,
+                ""
+            ),
+            ""
+        )
+    ).joinToString(" ")
