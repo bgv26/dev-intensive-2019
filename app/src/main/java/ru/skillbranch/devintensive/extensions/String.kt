@@ -9,6 +9,6 @@ fun String.truncate(len: Int = 16): String {
 }
 
 fun String.stripHtml(): String = this
-        .replace("""<.*?>""".toRegex(), "") // Remove HTML tags
-        .replace("""&(#\d+?|\w+?);""".toRegex(), "") // Remove HTML escape sequences
-        .replace(""" +""".toRegex(), " ") // Remove extra spaces
+    .replace(Regex("""<.*?>"""), "") // Remove HTML tags
+    .replace(Regex("""&(#\d+?|\w+?);"""), "") // Remove HTML escape sequences
+    .replace(Regex(""" +"""), " ") // Remove extra spaces
