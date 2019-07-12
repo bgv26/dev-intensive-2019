@@ -12,26 +12,24 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
         Question.IDLE -> Question.IDLE.question
     }
 
-    fun listenAnswer(answer: String): Pair<String, Triple<Int, Int, Int>> {
-        return if (!question.validation(answer).first) {
-            "${question.validation(answer).second}\n${question.question}" to status.color
-        } else {
-            if (question.answers.contains(answer.toLowerCase())) {
-                wrongAnswer = 0
-                question = question.nextQuestion()
-                "Отлично - ты справился\n${question.question}" to status.color
-            } else {
-                wrongAnswer++
-                if (wrongAnswer < 4) {
-                    status = status.nextStatus()
-                    "Это неправильный ответ\n${question.question}" to status.color
-                } else {
-                    status = Status.NORMAL
-                    question = Question.NAME
-                    wrongAnswer = 0
-                    "Это неправильный ответ. Давай все по новой\n${question.question}" to status.color
-                }
-            }
+    fun listenAnswer(answer: String): Pair<String, Triple<Int, Int, Int>> = when {
+        question == Question.IDLE -> question.question to status.color
+        wrongAnswer == 4 -> {
+            status = Status.NORMAL
+            question = Question.NAME
+            wrongAnswer = 0
+            "Это неправильный ответ. Давай все по новой\n${question.question}" to status.color
+        }
+        !question.validation(answer).first -> "${question.validation(answer).second}\n${question.question}" to status.color
+        question.answers.contains(answer.toLowerCase()) -> {
+            wrongAnswer = 0
+            question = question.nextQuestion()
+            "Отлично - ты справился\n${question.question}" to status.color
+        }
+        else -> {
+            wrongAnswer++
+            status = status.nextStatus()
+            "Это неправильный ответ\n${question.question}" to status.color
         }
     }
 
@@ -41,7 +39,7 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
         DANGER(Triple(255, 60, 60)),
         CRITICAL(Triple(255, 0, 0));
 
-        fun nextStatus(): Status = values()[(ordinal + 1) % values().lastIndex]
+        fun nextStatus(): Status = values()[(ordinal + 1) % values().size]
     }
 
     enum class Question(val question: String, val answers: List<String>) {

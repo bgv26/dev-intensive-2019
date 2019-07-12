@@ -252,9 +252,23 @@ class ExampleUnitTest {
 
     @Test
     fun test_validation() {
-        val benderObj = Bender(Bender.Status.NORMAL, Bender.Question.NAME)
-        println(benderObj.listenAnswer("bender"))
-        val benderObj1 = Bender(Bender.Status.NORMAL, Bender.Question.IDLE)
-        println(benderObj1.listenAnswer("any text"))
+        println(Bender(Bender.Status.NORMAL, Bender.Question.NAME).listenAnswer("bender"))
+        println(Bender(Bender.Status.NORMAL, Bender.Question.NAME).listenAnswer("Bender"))
+        println(Bender(Bender.Status.NORMAL, Bender.Question.NAME).listenAnswer("Fry"))
+        println(Bender(Bender.Status.NORMAL, Bender.Question.PROFESSION).listenAnswer("bender"))
+        println(Bender(Bender.Status.NORMAL, Bender.Question.PROFESSION).listenAnswer("Bender"))
+        println(Bender(Bender.Status.NORMAL, Bender.Question.PROFESSION).listenAnswer("монтажник"))
+        println(Bender(Bender.Status.NORMAL, Bender.Question.MATERIAL).listenAnswer("Уран 237"))
+        println(Bender(Bender.Status.NORMAL, Bender.Question.MATERIAL).listenAnswer("дерево"))
+        println(Bender(Bender.Status.NORMAL, Bender.Question.MATERIAL).listenAnswer("железо"))
+        println(Bender(Bender.Status.NORMAL, Bender.Question.BDAY).listenAnswer("1923 год"))
+        println(Bender(Bender.Status.NORMAL, Bender.Question.BDAY).listenAnswer("2993"))
+        println(Bender(Bender.Status.NORMAL, Bender.Question.BDAY).listenAnswer("1923"))
+        println(Bender(Bender.Status.NORMAL, Bender.Question.SERIAL).listenAnswer("1923"))
+        println(Bender(Bender.Status.NORMAL, Bender.Question.SERIAL).listenAnswer("1923abc"))
+        println(Bender(Bender.Status.NORMAL, Bender.Question.SERIAL).listenAnswer("2716057"))
+        println(Bender(Bender.Status.NORMAL, Bender.Question.SERIAL).listenAnswer("2716257"))
+        println(Bender(Bender.Status.CRITICAL, Bender.Question.SERIAL).listenAnswer("2716257"))
+        println(Bender(Bender.Status.NORMAL, Bender.Question.IDLE).listenAnswer("any text"))
     }
 }
