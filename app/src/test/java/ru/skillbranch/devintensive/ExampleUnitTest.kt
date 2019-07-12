@@ -4,6 +4,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 import ru.skillbranch.devintensive.extensions.*
 import ru.skillbranch.devintensive.models.BaseMessage
+import ru.skillbranch.devintensive.models.Bender
 import ru.skillbranch.devintensive.models.Chat
 import ru.skillbranch.devintensive.models.User
 import ru.skillbranch.devintensive.utils.Utils
@@ -247,5 +248,13 @@ class ExampleUnitTest {
             <div style="margin: 0in 0in 0pt">line3</div>
         """.trimIndent()
         assertEquals(" line1 \n line2\n\nline3", longHtml.stripHtml())
+    }
+
+    @Test
+    fun test_validation() {
+        val benderObj = Bender(Bender.Status.NORMAL, Bender.Question.NAME)
+        println(benderObj.listenAnswer("bender"))
+        val benderObj1 = Bender(Bender.Status.NORMAL, Bender.Question.IDLE)
+        println(benderObj1.listenAnswer("any text"))
     }
 }
