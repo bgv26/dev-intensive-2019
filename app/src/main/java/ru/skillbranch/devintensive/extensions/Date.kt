@@ -59,7 +59,8 @@ enum class TimeUnits {
 
         val remainder = value % 10
         var quotient = value / 10
-        while (quotient > 10) quotient /= 10
+        while (quotient > 100) quotient /= 10
+        quotient %= 10
 
         return when {
             (remainder in 2..4) && (quotient != 1) -> "$value ${plurals[this]?.first}"
