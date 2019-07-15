@@ -1,7 +1,6 @@
 package ru.skillbranch.devintensive.models
 
-class Bender(var status: Status = Status.NORMAL, var question: Question = Question.NAME) {
-    private var wrongAnswer: Int = 0
+class Bender(var status: Status = Status.NORMAL, var question: Question = Question.NAME, var wrongAnswer: Int = 0) {
 
     fun askQuestion(): String = when (question) {
         Question.NAME -> Question.NAME.question
@@ -56,7 +55,7 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
         MATERIAL("Из чего я сделан?", listOf("металл", "дерево", "metal", "iron", "wood")) {
             override fun nextQuestion() = BDAY
             override fun validation(answer: String?): Pair<Boolean, String> =
-                (answer?.all { it.isLetter() } ?: false) to "Материал не должен содержать цифр"
+                (answer?.all { !it.isDigit() } ?: false) to "Материал не должен содержать цифр"
         },
         BDAY("Когда меня создали?", listOf("2993")) {
             override fun nextQuestion() = SERIAL

@@ -1,9 +1,13 @@
 package ru.skillbranch.devintensive.extensions
 
 import android.app.Activity
+import android.content.Context
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.graphics.Rect
+import android.util.Log
+import android.util.TypedValue
 import android.view.inputmethod.InputMethodManager
+import kotlin.math.roundToInt
 
 
 fun Activity.hideKeyboard() {
@@ -15,12 +19,12 @@ fun Activity.hideKeyboard() {
 }
 
 fun Activity.isKeyboardOpen(): Boolean {
-    val rootView = window.decorView
+    val rootView = window.decorView.rootView
     val visibleBounds = Rect()
     rootView.getWindowVisibleDisplayFrame(visibleBounds)
-    return rootView.height > visibleBounds.height()
+    val heightDiff = rootView.height - visibleBounds.height()
+    val marginOfError = this.convertDpToPx(50F).roundToInt()
+    return heightDiff > marginOfError
 }
 
-fun Activity.isKeyboardClosed(): Boolean {
-    return !this.isKeyboardOpen()
-}
+fun Activity.isKeyboardClosed(): Boolean = !isKeyboardOpen()

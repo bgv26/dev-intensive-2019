@@ -31,7 +31,8 @@ class MainActivity : AppCompatActivity() {
         sendBtn = iv_send
         val status = savedInstanceState?.getString("STATUS") ?: Bender.Status.NORMAL.name
         val question = savedInstanceState?.getString("QUESTION") ?: Bender.Question.NAME.name
-        benderObj = Bender(Bender.Status.valueOf(status), Bender.Question.valueOf(question))
+        val wrongAnswer = savedInstanceState?.getInt("WRONG_ANSWER") ?: 0
+        benderObj = Bender(Bender.Status.valueOf(status), Bender.Question.valueOf(question), wrongAnswer)
 
         Log.d("M_MainActivity", "onCreate $status $question")
 
@@ -86,6 +87,7 @@ class MainActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle?) {
         outState?.putString("STATUS", benderObj.status.name)
         outState?.putString("QUESTION", benderObj.question.name)
+        outState?.putInt("WRONG_ANSWER", benderObj.wrongAnswer)
         super.onSaveInstanceState(outState)
         Log.d("M_MainActivity", "onSaveInstanceState ${benderObj.status.name} ${benderObj.question.name}")
     }
