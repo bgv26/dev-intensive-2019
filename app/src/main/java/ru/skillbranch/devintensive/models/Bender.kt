@@ -18,17 +18,16 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
             question = question.nextQuestion()
             "Отлично - ты справился\n${question.question}" to status.color
         }
+        wrongAnswer == 3 -> {
+            status = Status.NORMAL
+            question = Question.NAME
+            wrongAnswer = 0
+            "Это неправильный ответ. Давай все по новой\n${question.question}" to status.color
+        }
         else -> {
             wrongAnswer++
-            if (wrongAnswer == 4) {
-                status = Status.NORMAL
-                question = Question.NAME
-                wrongAnswer = 0
-                "Это неправильный ответ. Давай все по новой\n${question.question}" to status.color
-            } else {
-                status = status.nextStatus()
-                "Это неправильный ответ\n${question.question}" to status.color
-            }
+            status = status.nextStatus()
+            "Это неправильный ответ\n${question.question}" to status.color
         }
     }
 
@@ -50,7 +49,7 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
         PROFESSION("Назови мою профессию?", listOf("сгибальщик", "bender")) {
             override fun nextQuestion() = MATERIAL
             override fun validation(answer: String?): Pair<Boolean, String> =
-                (answer !="" && answer?.get(0)?.isLowerCase() ?: false) to "Профессия должна начинаться со строчной буквы"
+                (answer != "" && answer?.get(0)?.isLowerCase() ?: false) to "Профессия должна начинаться со строчной буквы"
         },
         MATERIAL("Из чего я сделан?", listOf("металл", "дерево", "metal", "iron", "wood")) {
             override fun nextQuestion() = BDAY
