@@ -3,7 +3,6 @@ package ru.skillbranch.devintensive.extensions
 import android.app.Activity
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.graphics.Rect
-import android.util.Log
 import android.view.inputmethod.InputMethodManager
 import kotlin.math.roundToInt
 
@@ -17,7 +16,7 @@ fun Activity.hideKeyboard() {
 }
 
 fun Activity.isKeyboardOpen(): Boolean {
-    val rootView = window.decorView.rootView
+    val rootView = window.decorView
     val visibleBounds = Rect()
     rootView.getWindowVisibleDisplayFrame(visibleBounds)
     val heightDiff = rootView.height - visibleBounds.height()

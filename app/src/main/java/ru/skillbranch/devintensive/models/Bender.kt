@@ -1,15 +1,8 @@
 package ru.skillbranch.devintensive.models
 
-class Bender(var status: Status = Status.NORMAL, var question: Question = Question.NAME, var wrongAnswer: Int = 0) {
+class Bender(var status: Status = Status.NORMAL, var question: Question = Question.NAME) {
 
-    fun askQuestion(): String = when (question) {
-        Question.NAME -> Question.NAME.question
-        Question.PROFESSION -> Question.PROFESSION.question
-        Question.MATERIAL -> Question.MATERIAL.question
-        Question.BDAY -> Question.BDAY.question
-        Question.SERIAL -> Question.SERIAL.question
-        Question.IDLE -> Question.IDLE.question
-    }
+    fun askQuestion(): String = question.question
 
     fun listenAnswer(answer: String): Pair<String, Triple<Int, Int, Int>> = when {
         question == Question.IDLE -> question.question to status.color
@@ -18,14 +11,12 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
             question = question.nextQuestion()
             "Отлично - ты справился\n${question.question}" to status.color
         }
-        wrongAnswer == 3 -> {
+        status == Status.CRITICAL -> {
             status = Status.NORMAL
             question = Question.NAME
-            wrongAnswer = 0
             "Это неправильный ответ. Давай все по новой\n${question.question}" to status.color
         }
         else -> {
-            wrongAnswer++
             status = status.nextStatus()
             "Это неправильный ответ\n${question.question}" to status.color
         }
@@ -43,32 +34,32 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
     enum class Question(val question: String, val answers: List<String>) {
         NAME("Как меня зовут?", listOf("бендер", "bender")) {
             override fun nextQuestion() = PROFESSION
-            override fun validation(answer: String?): Pair<Boolean, String> =
+            override fun validation(answer: String?) =
                 (!answer.isNullOrBlank() && answer[0].isUpperCase()) to "Имя должно начинаться с заглавной буквы"
         },
         PROFESSION("Назови мою профессию?", listOf("сгибальщик", "bender")) {
             override fun nextQuestion() = MATERIAL
-            override fun validation(answer: String?): Pair<Boolean, String> =
+            override fun validation(answer: String?) =
                 (!answer.isNullOrBlank() && answer[0].isLowerCase()) to "Профессия должна начинаться со строчной буквы"
         },
         MATERIAL("Из чего я сделан?", listOf("металл", "дерево", "metal", "iron", "wood")) {
             override fun nextQuestion() = BDAY
-            override fun validation(answer: String?): Pair<Boolean, String> =
+            override fun validation(answer: String?) =
                 (answer?.all { !it.isDigit() } ?: false) to "Материал не должен содержать цифр"
         },
         BDAY("Когда меня создали?", listOf("2993")) {
             override fun nextQuestion() = SERIAL
-            override fun validation(answer: String?): Pair<Boolean, String> =
+            override fun validation(answer: String?) =
                 (answer?.all { it.isDigit() } ?: false) to "Год моего рождения должен содержать только цифры"
         },
         SERIAL("Мой серийный номер?", listOf("2716057")) {
             override fun nextQuestion() = IDLE
-            override fun validation(answer: String?): Pair<Boolean, String> =
+            override fun validation(answer: String?) =
                 (answer?.length == 7 && answer.all { it.isDigit() }) to "Серийный номер содержит только цифры, и их 7"
         },
         IDLE("На этом все, вопросов больше нет", listOf()) {
             override fun nextQuestion() = IDLE
-            override fun validation(answer: String?): Pair<Boolean, String> = true to ""
+            override fun validation(answer: String?) = true to "" // Валидация отсутствует
         };
 
         abstract fun nextQuestion(): Question
