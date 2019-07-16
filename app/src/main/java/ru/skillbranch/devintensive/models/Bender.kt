@@ -45,12 +45,12 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
         MATERIAL("Из чего я сделан?", listOf("металл", "дерево", "metal", "iron", "wood")) {
             override fun nextQuestion() = BDAY
             override fun validation(answer: String?) =
-                (answer?.all { !it.isDigit() } ?: false) to "Материал не должен содержать цифр"
+                (!answer.isNullOrBlank() && answer.all { !it.isDigit() }) to "Материал не должен содержать цифр"
         },
         BDAY("Когда меня создали?", listOf("2993")) {
             override fun nextQuestion() = SERIAL
             override fun validation(answer: String?) =
-                (answer?.all { it.isDigit() } ?: false) to "Год моего рождения должен содержать только цифры"
+                (!answer.isNullOrBlank() && answer.all { it.isDigit() }) to "Год моего рождения должен содержать только цифры"
         },
         SERIAL("Мой серийный номер?", listOf("2716057")) {
             override fun nextQuestion() = IDLE
