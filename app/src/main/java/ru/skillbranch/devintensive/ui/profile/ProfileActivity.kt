@@ -1,18 +1,20 @@
 package ru.skillbranch.devintensive.ui.profile
 
-import android.graphics.ColorFilter
-import android.graphics.PorterDuff
-import android.graphics.PorterDuffColorFilter
+import android.graphics.*
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.graphics.drawable.toDrawable
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_profile.*
 import ru.skillbranch.devintensive.R
+import ru.skillbranch.devintensive.extensions.convertSpToPx
 import ru.skillbranch.devintensive.models.Profile
+import ru.skillbranch.devintensive.utils.Utils.toInitials
 import ru.skillbranch.devintensive.viewmodels.ProfileViewModel
 
 class ProfileActivity : AppCompatActivity() {
@@ -25,11 +27,30 @@ class ProfileActivity : AppCompatActivity() {
     lateinit var viewFields: Map<String, TextView>
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
         initViews(savedInstanceState)
         initViewModel()
+
+        val firstName = et_first_name.text.toString()
+        val lastName = et_last_name.text.toString()
+        Log.d("M_ProfileActivity", "onCreate: firsName: $firstName, lastName: $lastName")
+
         Log.d("M_ProfileActivity", "onCreate")
+    }
+
+
+    override fun onResume() {
+        super.onResume()
+
+        val firstName = et_first_name.text.toString()
+        val lastName = et_last_name.text.toString()
+        Log.d("M_ProfileActivity", "onResume: firsName: $firstName, lastName: $lastName")
+
+        if (firstName.isNotBlank() || lastName.isNotBlank()) {
+            iv_avatar.setImageDrawable(getLetterTile(firstName, lastName))
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
@@ -47,7 +68,6 @@ class ProfileActivity : AppCompatActivity() {
             "repository" to et_repository,
             "rating" to tv_rating,
             "respect" to tv_respect
-
         )
 
         isEditMode = savedInstanceState?.getBoolean(IS_EDIT_MODE, false) ?: false
@@ -59,7 +79,7 @@ class ProfileActivity : AppCompatActivity() {
             showCurrentMode(isEditMode)
         }
 
-        btn_switch_theme.setOnClickListener{
+        btn_switch_theme.setOnClickListener {
             viewModel.switchTheme()
         }
     }
@@ -83,7 +103,7 @@ class ProfileActivity : AppCompatActivity() {
                 null
             }
 
-            val icon = if(isEdit){
+            val icon = if (isEdit) {
                 resources.getDrawable(R.drawable.ic_save_black_24dp, theme)
             } else {
                 resources.getDrawable(R.drawable.ic_edit_black_24dp, theme)
@@ -96,19 +116,18 @@ class ProfileActivity : AppCompatActivity() {
 
     private fun initViewModel() {
         viewModel = ViewModelProviders.of(this).get(ProfileViewModel::class.java)
-        viewModel.getProfileData().observe(this, Observer {updateUI(it)})
+        viewModel.getProfileData().observe(this, Observer { updateUI(it) })
         viewModel.getTheme().observe(this, Observer { updateTheme(it) })
     }
 
     private fun updateTheme(mode: Int) {
         Log.d("M_ProfileActivity", "updateTheme")
         delegate.setLocalNightMode(mode)
-
     }
 
     private fun updateUI(profile: Profile) {
         profile.toMap().also {
-            for((k, v) in viewFields) {
+            for ((k, v) in viewFields) {
                 v.text = it[k].toString()
             }
         }
@@ -124,5 +143,58 @@ class ProfileActivity : AppCompatActivity() {
             viewModel.saveProfileData(this)
         }
     }
+
+    private fun validateURL(): Boolean {
+        val wrongNames = listOf(
+            "enterprise",
+            "features",
+            "topics",
+            "collections",
+            "trending",
+            "events",
+            "marketplace",
+            "pricing",
+            "nonprofit",
+            "customer-stories",
+            "security",
+            "login",
+            "join"
+        )
+        return false
+    }
+
+    private fun getLetterTile(firstName: String, lastName: String): Drawable {
+        val width = resources.getDimensionPixelSize(R.dimen.avatar_round_size)
+        val height = resources.getDimensionPixelSize(R.dimen.avatar_round_size)
+        Log.d("M_ProfileActivity", "$width $height")
+
+        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        val initials = toInitials(firstName, lastName)
+
+        val bounds = Rect()
+        val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+        val c = Canvas()
+        c.setBitmap(bitmap)
+
+        val halfWidth = (width / 2).toFloat()
+        val halfHeight = (height / 2).toFloat()
+        paint.style = Paint.Style.FILL
+        paint.color = resources.getColor(R.color.color_accent, theme)
+        c.drawCircle(halfWidth, halfHeight, halfWidth, paint)
+
+
+        Log.d("M_ProfileActivity", "getLetterTile")
+        paint.textSize = convertSpToPx(52f)
+        paint.color = resources.getColor(android.R.color.white, theme)
+        paint.getTextBounds(initials, 0, initials!!.length, bounds)
+        c.drawText(
+            initials.toString(),
+            halfWidth - paint.measureText(initials) / 2,
+            halfHeight + bounds.height() / 2,
+            paint
+        )
+        return bitmap.toDrawable(resources)
+    }
+
 
 }

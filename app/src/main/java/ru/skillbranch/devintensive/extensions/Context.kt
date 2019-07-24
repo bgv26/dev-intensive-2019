@@ -11,3 +11,11 @@ fun Context.convertDpToPx(dp: Float): Float {
     )
 }
 
+fun Context.convertSpToPx(sp: Float): Float {
+    return TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_SP,
+        sp,
+        this.resources.displayMetrics
+    )
+}
+
