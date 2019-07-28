@@ -233,7 +233,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_toRightOf="@id/ic_repo"
-                android:layout_marginLeft="@dimen/spacing_normal_16">
+                android:layout_marginLeft="@dimen/spacing_normal_16"
+                app:errorEnabled="true">
             <EditText
                     style="@style/Profile.EditText.Single"
                     android:id="@+id/et_repository"

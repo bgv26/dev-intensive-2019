@@ -3,7 +3,11 @@ package ru.skillbranch.devintensive.ui.profile
 import android.graphics.*
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.AttributeSet
 import android.util.Log
+import android.util.TypedValue
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -32,10 +36,6 @@ class ProfileActivity : AppCompatActivity() {
         setContentView(R.layout.activity_profile)
         initViews(savedInstanceState)
         initViewModel()
-
-        val firstName = et_first_name.text.toString()
-        val lastName = et_last_name.text.toString()
-        Log.d("M_ProfileActivity", "onCreate: firsName: $firstName, lastName: $lastName")
 
         Log.d("M_ProfileActivity", "onCreate")
     }
@@ -82,6 +82,19 @@ class ProfileActivity : AppCompatActivity() {
         btn_switch_theme.setOnClickListener {
             viewModel.switchTheme()
         }
+
+        et_repository.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                wr_repository.error = if (!validateURL(s)) "Невалидный адрес репозитория" else ""
+            }
+
+        })
     }
 
     private fun showCurrentMode(isEdit: Boolean) {
@@ -98,7 +111,8 @@ class ProfileActivity : AppCompatActivity() {
 
         with(btn_edit) {
             val filter: ColorFilter? = if (isEdit) {
-                PorterDuffColorFilter(resources.getColor(R.color.color_accent, theme), PorterDuff.Mode.SRC_IN)
+                val color = getColorAccent()
+                PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN)
             } else {
                 null
             }
@@ -138,13 +152,13 @@ class ProfileActivity : AppCompatActivity() {
             firstName = et_first_name.text.toString(),
             lastName = et_last_name.text.toString(),
             about = et_about.text.toString(),
-            repository = et_repository.text.toString()
+            repository = if (wr_repository.error.isNullOrBlank()) et_repository.text.toString() else ""
         ).apply {
             viewModel.saveProfileData(this)
         }
     }
 
-    private fun validateURL(): Boolean {
+    private fun validateURL(url: CharSequence?): Boolean {
         val wrongNames = listOf(
             "enterprise",
             "features",
@@ -159,8 +173,16 @@ class ProfileActivity : AppCompatActivity() {
             "security",
             "login",
             "join"
-        )
-        return false
+        ).joinToString("|")
+
+        val pattern = Regex("""^(https://)?(www\.)?github.com/(?!$wrongNames)[^/]+$""")
+        return url.isNullOrBlank() || pattern.matches(url)
+    }
+
+    private fun getColorAccent(): Int {
+        val typedValue = TypedValue()
+        theme.resolveAttribute(R.attr.colorAccent, typedValue, true)
+        return typedValue.data
     }
 
     private fun getLetterTile(firstName: String, lastName: String): Drawable {
@@ -179,7 +201,7 @@ class ProfileActivity : AppCompatActivity() {
         val halfWidth = (width / 2).toFloat()
         val halfHeight = (height / 2).toFloat()
         paint.style = Paint.Style.FILL
-        paint.color = resources.getColor(R.color.color_accent, theme)
+        paint.color = getColorAccent()
         c.drawCircle(halfWidth, halfHeight, halfWidth, paint)
 
 
