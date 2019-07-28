@@ -6,7 +6,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.profile.ProfileActivity"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        tools:ignore="RtlHardcoded,AutoFill,ContentDescription">
 
     <FrameLayout
             android:layout_width="match_parent"
@@ -233,7 +234,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_toRightOf="@id/ic_repo"
-                android:layout_marginLeft="@dimen/spacing_normal_16"
+                android:layout_marginStart="@dimen/spacing_normal_16"
                 app:errorEnabled="true">
             <EditText
                     style="@style/Profile.EditText.Single"
@@ -250,7 +251,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/ic_eye_24dp"
-                android:layout_marginLeft="@dimen/spacing_normal_16"
+                android:layout_marginStart="@dimen/spacing_normal_16"
                 android:layout_gravity="center_vertical"/>
 
     </LinearLayout>
