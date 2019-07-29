@@ -43,7 +43,7 @@ class CircleImageView @JvmOverloads constructor(
             val a = context.obtainStyledAttributes(attrs, R.styleable.CircleImageView, 0, 0)
 
             mBorderColor = a.getColor(R.styleable.CircleImageView_cv_borderColor, DEFAULT_BORDER_COLOR)
-            mBorderWidth = a.getDimensionPixelSize(R.styleable.CircleImageView_cv_borderWidth, DEFAULT_BORDER_WIDTH)
+            mBorderWidth = a.getDimension(R.styleable.CircleImageView_cv_borderWidth, DEFAULT_BORDER_WIDTH.toFloat()).toInt()
 
             a.recycle()
         }
@@ -99,7 +99,7 @@ class CircleImageView @JvmOverloads constructor(
     fun getBorderWidth(): Int = mBorderWidth
 
     fun setBorderWidth(@Dimension dp: Int) {
-        mBorderWidth = context.convertDpToPx(dp.toFloat()).roundToInt()
+        mBorderWidth = dp
 
         updateBitmap()
     }
