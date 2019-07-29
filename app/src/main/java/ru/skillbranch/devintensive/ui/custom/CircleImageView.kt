@@ -22,7 +22,7 @@ class CircleImageView @JvmOverloads constructor(
 ) : ImageView(context, attrs, defStyleAttr) {
     companion object {
         private const val DEFAULT_BORDER_COLOR = Color.WHITE
-        private const val DEFAULT_BORDER_WIDTH = 2
+        private const val DEFAULT_BORDER_WIDTH = 2f
         private val BITMAP_CONFIG = Bitmap.Config.ARGB_8888
         private val SCALE_TYPE = ScaleType.CENTER_CROP
     }
@@ -43,7 +43,7 @@ class CircleImageView @JvmOverloads constructor(
             val a = context.obtainStyledAttributes(attrs, R.styleable.CircleImageView, 0, 0)
 
             mBorderColor = a.getColor(R.styleable.CircleImageView_cv_borderColor, DEFAULT_BORDER_COLOR)
-            mBorderWidth = a.getDimension(R.styleable.CircleImageView_cv_borderWidth, DEFAULT_BORDER_WIDTH.toFloat()).toInt()
+            mBorderWidth = a.getDimension(R.styleable.CircleImageView_cv_borderWidth, DEFAULT_BORDER_WIDTH)
 
             a.recycle()
         }
@@ -96,10 +96,10 @@ class CircleImageView @JvmOverloads constructor(
     }
 
     @Dimension
-    fun getBorderWidth(): Int = mBorderWidth
+    fun getBorderWidth(): Int = mBorderWidth.roundToInt()
 
     fun setBorderWidth(@Dimension dp: Int) {
-        mBorderWidth = dp
+        mBorderWidth = dp.toFloat()
 
         updateBitmap()
     }
@@ -168,7 +168,7 @@ class CircleImageView @JvmOverloads constructor(
 
         mBorderPaint.color = mBorderColor
         mBorderPaint.style = Paint.Style.STROKE
-        mBorderPaint.strokeWidth = mBorderWidth.toFloat()
+        mBorderPaint.strokeWidth = mBorderWidth
 
         // scale up/down with respect to this view size and maintain aspect ratio
         // translate bitmap position with dx/dy to the center of the image

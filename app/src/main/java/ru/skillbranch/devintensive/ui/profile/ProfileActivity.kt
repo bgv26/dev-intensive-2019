@@ -18,7 +18,6 @@ import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.extensions.convertSpToPx
 import ru.skillbranch.devintensive.models.Profile
 import ru.skillbranch.devintensive.utils.Utils.toInitials
-import ru.skillbranch.devintensive.utils.Utils.transliteration
 import ru.skillbranch.devintensive.viewmodels.ProfileViewModel
 
 class ProfileActivity : AppCompatActivity() {
@@ -171,7 +170,7 @@ class ProfileActivity : AppCompatActivity() {
             "join"
         ).joinToString("|")
 
-        val pattern = Regex("""^(https://)?(www\.)?github.com/(?!$wrongNames)[^/]+$""")
+        val pattern = Regex("""^(https://)?(www\.)?github\.com/(?!$wrongNames)[^/]+$""")
         return url.isNullOrBlank() || pattern.matches(url)
     }
 
