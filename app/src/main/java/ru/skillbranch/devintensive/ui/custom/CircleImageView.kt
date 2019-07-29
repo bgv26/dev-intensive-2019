@@ -11,7 +11,6 @@ import androidx.annotation.ColorRes
 import androidx.annotation.Dimension
 import androidx.annotation.DrawableRes
 import ru.skillbranch.devintensive.R
-import ru.skillbranch.devintensive.extensions.convertDpToPx
 import kotlin.math.min
 import kotlin.math.roundToInt
 
