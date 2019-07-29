@@ -5,7 +5,6 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.AttributeSet
 import android.util.Log
 import android.util.TypedValue
 import android.view.View
@@ -19,6 +18,7 @@ import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.extensions.convertSpToPx
 import ru.skillbranch.devintensive.models.Profile
 import ru.skillbranch.devintensive.utils.Utils.toInitials
+import ru.skillbranch.devintensive.utils.Utils.transliteration
 import ru.skillbranch.devintensive.viewmodels.ProfileViewModel
 
 class ProfileActivity : AppCompatActivity() {
@@ -38,19 +38,6 @@ class ProfileActivity : AppCompatActivity() {
         initViewModel()
 
         Log.d("M_ProfileActivity", "onCreate")
-    }
-
-
-    override fun onResume() {
-        super.onResume()
-
-        val firstName = et_first_name.text.toString()
-        val lastName = et_last_name.text.toString()
-        Log.d("M_ProfileActivity", "onResume: firsName: $firstName, lastName: $lastName")
-
-        if (firstName.isNotBlank() || lastName.isNotBlank()) {
-            iv_avatar.setImageDrawable(getLetterTile(firstName, lastName))
-        }
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
@@ -144,6 +131,15 @@ class ProfileActivity : AppCompatActivity() {
             for ((k, v) in viewFields) {
                 v.text = it[k].toString()
             }
+        }
+
+        val firstName = et_first_name.text.toString()
+        val lastName = et_last_name.text.toString()
+
+        if (firstName.isNotBlank() || lastName.isNotBlank()) {
+            iv_avatar.setImageDrawable(getLetterTile(firstName, lastName))
+        } else {
+            iv_avatar.setImageResource(R.drawable.avatar_default)
         }
     }
 

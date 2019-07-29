@@ -21,8 +21,7 @@
         <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginBottom="@dimen/spacing_normal_16">
+                android:layout_gravity="center">
 
             <ImageButton
                     android:id="@+id/btn_switch_theme"
@@ -34,7 +33,7 @@
                     android:layout_marginRight="@dimen/spacing_huge_32"
                     android:layout_marginTop="36dp"/>
 
-            <ImageView
+            <ru.skillbranch.devintensive.ui.custom.CircleImageView
                     android:id="@+id/iv_avatar"
                     android:layout_width="@dimen/avatar_round_size"
                     android:layout_height="@dimen/avatar_round_size"
@@ -58,7 +57,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/iv_avatar"
                     android:layout_centerHorizontal="true"
-                    tools:text="Jonh Doe"/>
+                    tools:text="John Doe"/>
             <TextView
                     style="@style/Profile.Header.Rank"
                     android:id="@+id/tv_rank"
@@ -88,7 +87,7 @@
                     android:id="@+id/tv_rating"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="0"
+                    tools:text="0"
                     android:drawableLeft="@drawable/ic_sp_24"/>
             <TextView
                     style="@style/Profile.Metrics.Label"
@@ -115,7 +114,7 @@
                     android:id="@+id/tv_respect"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="0"
+                    tools:text="0"
                     android:drawableLeft="@drawable/ic_respect_24"/>
             <TextView
                     style="@style/Profile.Metrics.Label"
@@ -142,9 +141,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@id/ic_avatar"
-                android:layout_marginLeft="@dimen/spacing_normal_16"
-                android:textColor="@color/color_primary"
-                android:paddingTop="4dp">
+                android:layout_marginLeft="@dimen/spacing_normal_16">
             <EditText
                     style="@style/Profile.EditText.Single"
                     android:id="@+id/et_first_name"
@@ -195,7 +192,6 @@
                 android:id="@+id/wr_about"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/ic_about"
                 android:layout_marginLeft="@dimen/spacing_normal_16"
                 app:counterMaxLength="128">
             <EditText
@@ -233,7 +229,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_toRightOf="@id/ic_repo"
                 android:layout_marginStart="@dimen/spacing_normal_16"
                 app:errorEnabled="true">
             <EditText
