@@ -79,7 +79,7 @@ class ProfileActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (!validateURL(s)) {
                     wr_repository.isErrorEnabled = true
-                    wr_repository.error =  "Невалидный адрес репозитория"
+                    wr_repository.error = "Невалидный адрес репозитория"
                 } else {
                     wr_repository.isErrorEnabled = false
                 }
@@ -176,7 +176,7 @@ class ProfileActivity : AppCompatActivity() {
             "join"
         ).joinToString("|")
 
-        val pattern = Regex("""^(https://)?(www\.)?github\.com/(?!$wrongNames)[\-\w]+/?$""")
+        val pattern = Regex("""^(https://)?(www\.)?github\.com/(?!($wrongNames)/?$)[\-\w]+/?$""")
         return url.isNullOrBlank() || pattern.matches(url)
     }
 
@@ -204,7 +204,6 @@ class ProfileActivity : AppCompatActivity() {
         paint.style = Paint.Style.FILL
         paint.color = getColorAccent()
         c.drawCircle(halfWidth, halfHeight, halfWidth, paint)
-
 
         Log.d("M_ProfileActivity", "getLetterTile")
         paint.textSize = convertSpToPx(52f)
