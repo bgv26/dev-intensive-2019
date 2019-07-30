@@ -170,7 +170,7 @@ class ProfileActivity : AppCompatActivity() {
             "join"
         ).joinToString("|")
 
-        val pattern = Regex("""^(https://)?(www\.)?github\.com/(?!$wrongNames)[^/]+$""")
+        val pattern = Regex("""^(https://)?(www\.)?github\.com/(?!$wrongNames)[._\-\w\d]+/?$""")
         return url.isNullOrBlank() || pattern.matches(url)
     }
 
