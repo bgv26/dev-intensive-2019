@@ -77,7 +77,13 @@ class ProfileActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                wr_repository.error = if (!validateURL(s)) "Невалидный адрес репозитория" else ""
+                if (!validateURL(s)) {
+                    wr_repository.isErrorEnabled = true
+                    wr_repository.error =  "Невалидный адрес репозитория"
+                } else {
+                    wr_repository.isErrorEnabled = false
+                }
+
             }
 
         })
@@ -147,7 +153,7 @@ class ProfileActivity : AppCompatActivity() {
             firstName = et_first_name.text.toString(),
             lastName = et_last_name.text.toString(),
             about = et_about.text.toString(),
-            repository = if (wr_repository.error.isNullOrBlank()) et_repository.text.toString() else ""
+            repository = if (wr_repository.isErrorEnabled) "" else et_repository.text.toString()
         ).apply {
             viewModel.saveProfileData(this)
         }
@@ -170,7 +176,7 @@ class ProfileActivity : AppCompatActivity() {
             "join"
         ).joinToString("|")
 
-        val pattern = Regex("""^(https://)?(www\.)?github\.com/(?!$wrongNames)[._\-\w\d]+/?$""")
+        val pattern = Regex("""^(https://)?(www\.)?github\.com/(?!$wrongNames)[\-\w]+/?$""")
         return url.isNullOrBlank() || pattern.matches(url)
     }
 
