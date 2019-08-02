@@ -36,8 +36,6 @@ class ProfileActivity : AppCompatActivity() {
         setContentView(R.layout.activity_profile)
         initViews(savedInstanceState)
         initViewModel()
-
-        Log.d("M_ProfileActivity", "onCreate")
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
@@ -84,9 +82,7 @@ class ProfileActivity : AppCompatActivity() {
                 } else {
                     wr_repository.isErrorEnabled = false
                 }
-
             }
-
         })
     }
 
@@ -158,5 +154,4 @@ class ProfileActivity : AppCompatActivity() {
             viewModel.saveProfileData(this)
         }
     }
-
 }

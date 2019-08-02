@@ -43,13 +43,6 @@ data class User(
         fun build() = User(id, firstName, lastName, avatar, rating, respect, lastVisit, isOnline)
     }
 
-//    init {
-//        println(
-//            "It's Alive!!!\n" +
-//                    "${if (lastName === "Doe") "His name is $firstName $lastName" else "And his name is $firstName $lastName!!!"}\n"
-//        )
-//    }
-
     companion object Factory {
         private var lastId: Int = -1
         fun makeUser(fullName: String?): User {

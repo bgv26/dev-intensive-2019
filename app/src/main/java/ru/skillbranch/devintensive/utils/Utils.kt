@@ -1,6 +1,5 @@
 package ru.skillbranch.devintensive.utils
 
-
 object Utils {
     fun parseFullName(fullName: String?): Pair<String?, String?> {
         val parts: List<String>? = fullName?.trim()?.split(" ")
@@ -78,5 +77,4 @@ object Utils {
         val pattern = Regex("""^(https://)?(www\.)?github\.com/(?!($wrongNames)/?$)[\-\w]+/?$""")
         return url.isNullOrBlank() || pattern.matches(url)
     }
-
 }

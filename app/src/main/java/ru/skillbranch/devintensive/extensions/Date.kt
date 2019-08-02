@@ -45,7 +45,6 @@ fun Date.humanizeDiff(date: Date = Date()): String {
     }
 }
 
-
 enum class TimeUnits {
     SECOND, MINUTE, HOUR, DAY;
 

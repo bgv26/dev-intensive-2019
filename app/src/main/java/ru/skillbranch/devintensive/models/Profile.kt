@@ -28,5 +28,4 @@ data class Profile(
         "rating" to rating,
         "respect" to respect
     )
-
 }
