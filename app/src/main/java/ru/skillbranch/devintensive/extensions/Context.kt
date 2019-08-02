@@ -22,17 +22,14 @@ fun Context.getColorAccent(): Int {
     return typedValue.data
 }
 
-fun Context.convertTextToDrawable(text: String): Drawable {
-    val width = resources.getDimensionPixelSize(R.dimen.avatar_round_size)
-    val height = resources.getDimensionPixelSize(R.dimen.avatar_round_size)
-
-    val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+fun Context.getTextAvatar(text:String): Drawable {
+    val size = resources.getDimensionPixelSize(R.dimen.avatar_round_size)
+    val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
 
     val c = Canvas()
     c.setBitmap(bitmap)
 
-    val halfWidth = (width / 2).toFloat()
-    val halfHeight = (height / 2).toFloat()
+    val halfSize = (size / 2).toFloat()
 
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     paint.style = Paint.Style.FILL
@@ -46,7 +43,7 @@ fun Context.convertTextToDrawable(text: String): Drawable {
     paint.color = resources.getColor(android.R.color.white, theme)
     paint.getTextBounds(text, 0, text.length, bounds)
 
-    c.drawText(text, halfWidth - paint.measureText(text) / 2, halfHeight + bounds.height() / 2, paint)
+    c.drawText(text, halfSize - paint.measureText(text) / 2, halfSize + bounds.height() / 2, paint)
 
     return bitmap.toDrawable(resources)
 }

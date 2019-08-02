@@ -14,8 +14,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_profile.*
 import ru.skillbranch.devintensive.R
-import ru.skillbranch.devintensive.extensions.convertTextToDrawable
 import ru.skillbranch.devintensive.extensions.getColorAccent
+import ru.skillbranch.devintensive.extensions.getTextAvatar
 import ru.skillbranch.devintensive.models.Profile
 import ru.skillbranch.devintensive.utils.Utils.toInitials
 import ru.skillbranch.devintensive.utils.Utils.validateURL
@@ -134,14 +134,12 @@ class ProfileActivity : AppCompatActivity() {
                 v.text = it[k].toString()
             }
         }
+        updateAvatar(profile)
+    }
 
-        val initials = toInitials(profile.firstName, profile.lastName)
-
-        if (!initials.isNullOrBlank()) {
-            iv_avatar.setImageDrawable(convertTextToDrawable(initials))
-        } else {
-            iv_avatar.setImageResource(R.drawable.avatar_default)
-        }
+    private fun updateAvatar(profile: Profile) {
+        toInitials(profile.firstName, profile.lastName)?.let { iv_avatar.setImageDrawable(getTextAvatar(it)) }
+            ?: iv_avatar.setImageResource(R.drawable.avatar_default)
     }
 
     private fun saveProfileInfo() {
