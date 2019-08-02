@@ -1,23 +1,24 @@
 package ru.skillbranch.devintensive.ui.profile
 
-import android.graphics.*
-import android.graphics.drawable.Drawable
+import android.graphics.ColorFilter
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.util.TypedValue
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.graphics.drawable.toDrawable
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import kotlinx.android.synthetic.main.activity_profile_constraint.*
+import kotlinx.android.synthetic.main.activity_profile.*
 import ru.skillbranch.devintensive.R
-import ru.skillbranch.devintensive.extensions.convertSpToPx
+import ru.skillbranch.devintensive.extensions.convertTextToDrawable
+import ru.skillbranch.devintensive.extensions.getColorAccent
 import ru.skillbranch.devintensive.models.Profile
 import ru.skillbranch.devintensive.utils.Utils.toInitials
+import ru.skillbranch.devintensive.utils.Utils.validateURL
 import ru.skillbranch.devintensive.viewmodels.ProfileViewModel
 
 class ProfileActivity : AppCompatActivity() {
@@ -26,13 +27,13 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private lateinit var viewModel: ProfileViewModel
-    var isEditMode = false
-    lateinit var viewFields: Map<String, TextView>
+    private var isEditMode = false
+    private lateinit var viewFields: Map<String, TextView>
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_profile_constraint)
+        setTheme(R.style.AppTheme)
+        setContentView(R.layout.activity_profile)
         initViews(savedInstanceState)
         initViewModel()
 
@@ -40,8 +41,8 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
-        outState?.putBoolean(IS_EDIT_MODE, isEditMode)
         super.onSaveInstanceState(outState)
+        outState?.putBoolean(IS_EDIT_MODE, isEditMode)
     }
 
     private fun initViews(savedInstanceState: Bundle?) {
@@ -138,11 +139,10 @@ class ProfileActivity : AppCompatActivity() {
             }
         }
 
-        val firstName = et_first_name.text.toString()
-        val lastName = et_last_name.text.toString()
+        val initials = toInitials(profile.firstName, profile.lastName)
 
-        if (firstName.isNotBlank() || lastName.isNotBlank()) {
-            iv_avatar.setImageDrawable(getLetterTile(firstName, lastName))
+        if (!initials.isNullOrBlank()) {
+            iv_avatar.setImageDrawable(convertTextToDrawable(initials))
         } else {
             iv_avatar.setImageResource(R.drawable.avatar_default)
         }
@@ -158,65 +158,5 @@ class ProfileActivity : AppCompatActivity() {
             viewModel.saveProfileData(this)
         }
     }
-
-    private fun validateURL(url: CharSequence?): Boolean {
-        val wrongNames = listOf(
-            "enterprise",
-            "features",
-            "topics",
-            "collections",
-            "trending",
-            "events",
-            "marketplace",
-            "pricing",
-            "nonprofit",
-            "customer-stories",
-            "security",
-            "login",
-            "join"
-        ).joinToString("|")
-
-        val pattern = Regex("""^(https://)?(www\.)?github\.com/(?!($wrongNames)/?$)[\-\w]+/?$""")
-        return url.isNullOrBlank() || pattern.matches(url)
-    }
-
-    private fun getColorAccent(): Int {
-        val typedValue = TypedValue()
-        theme.resolveAttribute(R.attr.colorAccent, typedValue, true)
-        return typedValue.data
-    }
-
-    private fun getLetterTile(firstName: String, lastName: String): Drawable {
-        val width = resources.getDimensionPixelSize(R.dimen.avatar_round_size)
-        val height = resources.getDimensionPixelSize(R.dimen.avatar_round_size)
-        Log.d("M_ProfileActivity", "$width $height")
-
-        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-        val initials = toInitials(firstName, lastName)
-
-        val bounds = Rect()
-        val paint = Paint(Paint.ANTI_ALIAS_FLAG)
-        val c = Canvas()
-        c.setBitmap(bitmap)
-
-        val halfWidth = (width / 2).toFloat()
-        val halfHeight = (height / 2).toFloat()
-        paint.style = Paint.Style.FILL
-        paint.color = getColorAccent()
-        c.drawCircle(halfWidth, halfHeight, halfWidth, paint)
-
-        Log.d("M_ProfileActivity", "getLetterTile")
-        paint.textSize = convertSpToPx(52f)
-        paint.color = resources.getColor(android.R.color.white, theme)
-        paint.getTextBounds(initials, 0, initials!!.length, bounds)
-        c.drawText(
-            initials.toString(),
-            halfWidth - paint.measureText(initials) / 2,
-            halfHeight + bounds.height() / 2,
-            paint
-        )
-        return bitmap.toDrawable(resources)
-    }
-
 
 }
