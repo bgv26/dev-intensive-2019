@@ -114,11 +114,11 @@ class GroupActivity : AppCompatActivity() {
 
     private fun updateChips(listUsers: List<UserItem>) {
         chip_group.visibility = if (listUsers.isEmpty()) View.GONE else View.VISIBLE
-        val users = listUsers.associate { user -> user.id to user }.toMutableMap()
-        val views = chip_group.children.associate { view -> view.tag to view }
+        val users = listUsers.associateBy { user -> user.id }.toMutableMap()
+        val views = chip_group.children.associateBy { view -> view.tag }
 
         for ((k, v) in views) {
-            if (users.contains(k)) chip_group.removeView(v)
+            if (!users.contains(k)) chip_group.removeView(v)
             else users.remove(k)
         }
 

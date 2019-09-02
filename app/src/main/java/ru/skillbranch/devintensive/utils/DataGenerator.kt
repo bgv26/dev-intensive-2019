@@ -381,9 +381,9 @@ object DataGenerator {
             val members = stabUsers.randomSublist(5, 2)
             Log.e("DataGenerator", "$members")
             val groupChat = Chat(
-                "${list.size}",
-                members.map { it.firstName }.joinToString(", "),
-                members
+                id = "${list.size}",
+                title = members.map { it.firstName }.joinToString(", "),
+                members = members
             )
             groupChat.messages = generateRandomMessages(groupChat, members)
             list.add(groupChat)

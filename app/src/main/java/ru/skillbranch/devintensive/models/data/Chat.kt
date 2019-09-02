@@ -25,38 +25,49 @@ data class Chat(
     fun lastMessageShort(): Pair<String, String?> = when (val lastMessage = messages.lastOrNull()) {
         is TextMessage -> (lastMessage.text ?: "") to lastMessage.from.firstName
         is ImageMessage -> "${lastMessage.from.firstName} - отправил фото" to lastMessage.from.firstName
-        else -> "Неподдерживаемый тип сообщения" to null
+        else -> "Неподдерживаемый тип сообщения" to lastMessage?.from?.firstName
     }
 
     private fun isSingle(): Boolean = members.size == 1
 
-    fun toChatItem(): ChatItem {
-        return if (isSingle()) {
+    fun toChatItem(): ChatItem  = when {
+        isArchived -> ChatItem(
+                id = id,
+                avatar = null,
+                initials = "",
+                title = title,
+                shortDescription = lastMessageShort().first,
+                messageCount = unreadableMessageCount(),
+                lastMessageDate = lastMessageDate()?.shortFormat(),
+                isOnline = false,
+                chatType = ChatType.ARCHIVE,
+                author = lastMessageShort().second
+            )
+        isSingle() -> {
             val user = members.first()
             ChatItem(
-                id,
-                user.avatar,
-                Utils.toInitials(user.firstName, user.lastName) ?: "??",
-                "${user.firstName ?: ""} ${user.lastName ?: ""}",
-                lastMessageShort().first,
-                unreadableMessageCount(),
-                lastMessageDate()?.shortFormat(),
-                user.isOnline
-            )
-        } else {
-            ChatItem(
-                id,
-                null,
-                "",
-                title,
-                lastMessageShort().first,
-                unreadableMessageCount(),
-                lastMessageDate()?.shortFormat(),
-                false,
-                ChatType.GROUP,
-                lastMessageShort().second
+                id = id,
+                avatar = user.avatar,
+                initials = Utils.toInitials(user.firstName, user.lastName) ?: "??",
+                title = "${user.firstName ?: ""} ${user.lastName ?: ""}",
+                shortDescription = lastMessageShort().first,
+                messageCount = unreadableMessageCount(),
+                lastMessageDate = lastMessageDate()?.shortFormat(),
+                isOnline = user.isOnline
             )
         }
+        else-> ChatItem(
+                id = id,
+                avatar = null,
+                initials = "",
+                title = title,
+                shortDescription = lastMessageShort().first,
+                messageCount = unreadableMessageCount(),
+                lastMessageDate = lastMessageDate()?.shortFormat(),
+                isOnline = false,
+                chatType = ChatType.GROUP,
+                author = lastMessageShort().second
+            )
     }
 }
 

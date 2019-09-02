@@ -238,7 +238,7 @@ class AvatarImageView @JvmOverloads constructor(
 
         val bounds = Rect()
 
-        paint.textSize = context.convertSpToPx(52f)
+        paint.textSize = context.convertSpToPx(18f)
         paint.color = resources.getColor(android.R.color.white, context.theme)
         paint.getTextBounds(text, 0, text.length, bounds)
 

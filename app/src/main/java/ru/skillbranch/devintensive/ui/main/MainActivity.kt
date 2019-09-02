@@ -2,7 +2,9 @@ package ru.skillbranch.devintensive.ui.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -30,6 +32,26 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_search, menu)
+        val searchItem = menu?.findItem(R.id.action_search)
+        val searchView = searchItem?.actionView as SearchView
+        searchView.queryHint = "Введите имя пользователя"
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                viewModel.handleSearchQuery(query)
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String): Boolean {
+                viewModel.handleSearchQuery(newText)
+                return true
+            }
+
+        })
+        return super.onCreateOptionsMenu(menu)
+    }
+
     private fun initToolbar() {
         setSupportActionBar(toolbar)
     }
@@ -40,8 +62,12 @@ class MainActivity : AppCompatActivity() {
         }
         val divider = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
         val touchCallback = ChatItemTouchHelperCallback(chatAdapter) {
-            viewModel.addToArchive(it.id)
-            Snackbar.make(rv_chat_list, "Вы точно хотите добавить ${it.title} в архив?", Snackbar.LENGTH_LONG).show()
+            val item = it
+            viewModel.addToArchive(item.id)
+            val snackbar =
+                Snackbar.make(rv_chat_list, "Вы точно хотите добавить ${item.title} в архив?", Snackbar.LENGTH_LONG)
+            snackbar.setAction(R.string.archive_undo_string) { viewModel.restoreFromArchive(item.id) }
+            snackbar.show()
         }
 
         val touchHelper = ItemTouchHelper(touchCallback)
