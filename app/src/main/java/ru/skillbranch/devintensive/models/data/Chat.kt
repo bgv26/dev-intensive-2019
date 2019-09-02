@@ -1,8 +1,10 @@
 package ru.skillbranch.devintensive.models.data
 
-import ru.skillbranch.devintensive.extensions.fullName
+import androidx.annotation.VisibleForTesting
 import ru.skillbranch.devintensive.extensions.shortFormat
 import ru.skillbranch.devintensive.models.BaseMessage
+import ru.skillbranch.devintensive.models.ImageMessage
+import ru.skillbranch.devintensive.models.TextMessage
 import ru.skillbranch.devintensive.utils.Utils
 import java.util.*
 
@@ -13,19 +15,17 @@ data class Chat(
     var messages: MutableList<BaseMessage> = mutableListOf(),
     var isArchived: Boolean = false
 ) {
-    private fun unreadableMessageCount(): Int {
-        // TODO implement me
-        return 0
-    }
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    fun unreadableMessageCount(): Int = messages.count { !it.isReaded }
 
-    private fun lastMessageDate(): Date? {
-        // TODO implement me
-        return Date()
-    }
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    fun lastMessageDate(): Date? = messages.lastOrNull()?.date
 
-    private fun lastMessageShort(): Pair<String, String> {
-        // TODO implement me
-        return "Сообщений нет" to "@John_Doe"
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    fun lastMessageShort(): Pair<String, String?> = when (val lastMessage = messages.lastOrNull()) {
+        is TextMessage -> (lastMessage.text ?: "") to lastMessage.from.firstName
+        is ImageMessage -> "${lastMessage.from.firstName} - отправил фото" to lastMessage.from.firstName
+        else -> "Неподдерживаемый тип сообщения" to null
     }
 
     private fun isSingle(): Boolean = members.size == 1
@@ -37,7 +37,7 @@ data class Chat(
                 id,
                 user.avatar,
                 Utils.toInitials(user.firstName, user.lastName) ?: "??",
-                user.fullName(),
+                "${user.firstName ?: ""} ${user.lastName ?: ""}",
                 lastMessageShort().first,
                 unreadableMessageCount(),
                 lastMessageDate()?.shortFormat(),
@@ -55,7 +55,6 @@ data class Chat(
                 false,
                 ChatType.GROUP,
                 lastMessageShort().second
-
             )
         }
     }
@@ -66,3 +65,6 @@ enum class ChatType {
     GROUP,
     ARCHIVE
 }
+
+
+

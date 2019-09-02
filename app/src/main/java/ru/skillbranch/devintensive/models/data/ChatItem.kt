@@ -1,5 +1,6 @@
 package ru.skillbranch.devintensive.models.data
 
+
 data class ChatItem (
     val id: String,
     val avatar: String?,
@@ -9,6 +10,6 @@ data class ChatItem (
     val messageCount: Int = 0,
     val lastMessageDate: String?,
     val isOnline: Boolean = false,
-    val chatType: ChatType = ChatType.SINGLE,
-    val author: String? = null
+    val chatType : ChatType = ChatType.SINGLE,
+    var author :String? = null
 )
