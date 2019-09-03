@@ -1,6 +1,5 @@
 package ru.skillbranch.devintensive.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Transformations
@@ -13,21 +12,13 @@ import ru.skillbranch.devintensive.repositories.ChatRepository
 class MainViewModel : ViewModel() {
     private val query = mutableLiveData("")
     private val chatRepository = ChatRepository
+
     private val nonArchiveChats = Transformations.map(chatRepository.loadChats()) { chats ->
-        return@map chats.filter { !it.isArchived }
-            .map { it.toChatItem() }
-            .sortedBy { it.id.toInt() }
-    }
-    private val allChats = Transformations.map(chatRepository.loadChats()) { chats ->
-        return@map chats.groupBy { it.isArchived }
-            .flatMap { (_, v) -> v.map {it.toChatItem() }}
-            .sortedBy { it.id.toInt() }
+        return@map chats.filter { !it.isArchived }.map { it.toChatItem() }.sortedBy { it.id.toInt() }
     }
 
-    private fun getArchiveChatItem(): ChatItem? {
-        val archiveChatList = allChats.value?.filter { it.chatType == ChatType.ARCHIVE }
-        val archiveChat = archiveChatList?.last()
-        return archiveChat?.copy(messageCount = archiveChatList.sumBy { it.messageCount })
+    private val archiveChats = Transformations.map(chatRepository.loadChats()) { chats ->
+        return@map chats.filter { it.isArchived }.map { it.toChatItem() }
     }
 
     fun getChatData(): LiveData<List<ChatItem>> {
@@ -36,23 +27,29 @@ class MainViewModel : ViewModel() {
         val filterF = {
             val queryStr = query.value!!
             val chats: MutableList<ChatItem> = mutableListOf()
-            val archiveChat = getArchiveChatItem()
-            if (archiveChat != null) chats.add(archiveChat)
-            chats.addAll(allChats.value!!.filter { it.chatType != ChatType.ARCHIVE })
+            if (!archiveChats.value.isNullOrEmpty()) {
+                chats.add(
+                    archiveChats.value!!.last().copy(
+                        chatType = ChatType.ARCHIVE,
+                        messageCount = archiveChats.value!!.sumBy { it.messageCount })
+                )
+            }
+            chats.addAll(nonArchiveChats.value!!)
 
             result.value = if (queryStr.isEmpty()) chats
             else chats.filter { it.title.contains(queryStr, true) }
         }
 
-        result.addSource(allChats) { filterF.invoke() }
+        result.addSource(nonArchiveChats) { filterF.invoke() }
         result.addSource(query) { filterF.invoke() }
 
         return result
     }
 
+    fun getArchiveData(): LiveData<List<ChatItem>> = archiveChats
+
     fun addToArchive(chatId: String) {
         val chat = chatRepository.find(chatId)
-        Log.d("M_MainViewModel", "addToArchive $chat")
         chat ?: return
         chatRepository.update(chat.copy(isArchived = true))
     }
