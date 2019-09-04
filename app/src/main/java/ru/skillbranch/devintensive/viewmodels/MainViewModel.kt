@@ -29,7 +29,7 @@ class MainViewModel : ViewModel() {
             val chats: MutableList<ChatItem> = mutableListOf()
             if (!archiveChats.value.isNullOrEmpty()) {
                 chats.add(
-                    archiveChats.value!!.last().copy(
+                    archiveChats.value!!.sortedBy { it.lastMessageDate }.last().copy(
                         chatType = ChatType.ARCHIVE,
                         messageCount = archiveChats.value!!.sumBy { it.messageCount })
                 )

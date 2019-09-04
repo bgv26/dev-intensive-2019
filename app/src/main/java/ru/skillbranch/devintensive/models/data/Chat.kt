@@ -31,18 +31,6 @@ data class Chat(
     private fun isSingle(): Boolean = members.size == 1
 
     fun toChatItem(): ChatItem  = when {
-//        isArchived -> ChatItem(
-//                id = id,
-//                avatar = null,
-//                initials = "",
-//                title = title,
-//                shortDescription = lastMessageShort().first,
-//                messageCount = unreadableMessageCount(),
-//                lastMessageDate = lastMessageDate()?.shortFormat(),
-//                isOnline = false,
-//                chatType = ChatType.ARCHIVE,
-//                author = lastMessageShort().second
-//            )
         isSingle() -> {
             val user = members.first()
             ChatItem(
