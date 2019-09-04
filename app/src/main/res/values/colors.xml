@@ -9,10 +9,12 @@
     <color name="color_gray">#9CA9BA</color>
     <color name="color_gray_dark">#675F7F</color>
     <color name="color_gray_light">#ECECEC</color>
-
-    <color name="color_toolbar_night">#272727</color>
-    <color name="color_divider_dark">#1F000000</color>
-    <color name="color_divider_light">#1FFFFFFF</color>
     <color name="color_daisy">#581F99</color>
     <color name="color_green">#4FD149</color>
+
+    <color name="color_toolbar_night">#272727</color>
+    <color name="color_snackbar_text_night">#121212</color>
+    <color name="color_chip_background_night">#1D1D1D</color>
+    <color name="color_divider_dark">#1F000000</color>
+    <color name="color_divider_light">#1FFFFFFF</color>
 </resources>

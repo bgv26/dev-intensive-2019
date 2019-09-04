@@ -18,5 +18,14 @@
     <attr name="colorDivider" format="reference"/>
     <attr name="colorIcon" format="reference"/>
     <attr name="colorMessage" format="reference"/>
-
+    <attr name="colorArchiveIcon" format="reference"/>
+    <attr name="colorCounterBackground" format="reference"/>
+    <attr name="colorIndicatorBackground" format="reference"/>
+    <attr name="colorIconDone" format="reference"/>
+    <attr name="colorToolbar" format="reference"/>
+    <attr name="colorSnackbarBackground" format="reference"/>
+    <attr name="colorSnackbarTextColor" format="reference"/>
+    <attr name="colorSwipeBackground" format="reference"/>
+    <attr name="colorChipBackground" format="reference"/>
+    <attr name="colorChipButtonBackground" format="reference"/>
 </resources>

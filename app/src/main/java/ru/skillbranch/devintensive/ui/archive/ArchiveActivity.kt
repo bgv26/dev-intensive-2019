@@ -2,6 +2,7 @@ package ru.skillbranch.devintensive.ui.archive
 
 import android.os.Bundle
 import android.view.MenuItem
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -12,6 +13,7 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_archive.*
 import kotlinx.android.synthetic.main.activity_main.toolbar
 import ru.skillbranch.devintensive.R
+import ru.skillbranch.devintensive.extensions.resolveColor
 import ru.skillbranch.devintensive.ui.adapters.ChatAdapter
 import ru.skillbranch.devintensive.ui.adapters.ChatItemTouchHelperCallback
 import ru.skillbranch.devintensive.viewmodels.ArchiveViewModel
@@ -46,7 +48,13 @@ class ArchiveActivity : AppCompatActivity() {
 
     private fun initViews() {
         chatAdapter = ChatAdapter {
-            Snackbar.make(rv_archive_list, "Click on ${it.title}", Snackbar.LENGTH_LONG).show()
+            val snackbar = Snackbar.make(rv_archive_list, "Click on ${it.title}", Snackbar.LENGTH_LONG)
+            with(snackbar.view) {
+                setBackgroundColor(resolveColor(R.attr.colorSnackbarBackground))
+                val textView = findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
+                textView.setTextColor(resolveColor(R.attr.colorSnackbarTextColor))
+            }
+            snackbar.show()
         }
         val divider = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
         val touchCallback = ChatItemTouchHelperCallback(chatAdapter) {
@@ -59,6 +67,11 @@ class ArchiveActivity : AppCompatActivity() {
                     Snackbar.LENGTH_LONG
                 )
             snackbar.setAction(R.string.archive_undo_string) { viewModel.addToArchive(item.id) }
+            with(snackbar.view) {
+                setBackgroundColor(resolveColor(R.attr.colorSnackbarBackground))
+                val textView = findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
+                textView.setTextColor(resolveColor(R.attr.colorSnackbarTextColor))
+            }
             snackbar.show()
         }
 
