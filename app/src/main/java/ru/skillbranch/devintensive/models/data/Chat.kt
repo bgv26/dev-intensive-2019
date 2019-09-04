@@ -19,10 +19,10 @@ data class Chat(
     fun unreadableMessageCount(): Int = messages.count { !it.isReaded }
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    fun lastMessageDate(): Date? = messages.lastOrNull()?.date
+    fun lastMessageDate(): Date? = messages.maxBy { it.date }?.date
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    fun lastMessageShort(): Pair<String, String?> = when (val lastMessage = messages.lastOrNull()) {
+    fun lastMessageShort(): Pair<String, String?> = when (val lastMessage = messages.maxBy { it.date }) {
         is TextMessage -> (lastMessage.text ?: "") to lastMessage.from.firstName
         is ImageMessage -> "${lastMessage.from.firstName} - отправил фото" to lastMessage.from.firstName
         else -> "Неподдерживаемый тип сообщения" to lastMessage?.from?.firstName
@@ -30,7 +30,7 @@ data class Chat(
 
     private fun isSingle(): Boolean = members.size == 1
 
-    fun toChatItem(): ChatItem  = when {
+    fun toChatItem(): ChatItem = when {
         isSingle() -> {
             val user = members.first()
             ChatItem(
@@ -45,18 +45,18 @@ data class Chat(
                 author = user.firstName ?: ""
             )
         }
-        else-> ChatItem(
-                id = id,
-                avatar = null,
-                initials = "",
-                title = title,
-                shortDescription = lastMessageShort().first,
-                messageCount = unreadableMessageCount(),
-                lastMessageDate = lastMessageDate()?.shortFormat(),
-                isOnline = false,
-                chatType = ChatType.GROUP,
-                author = lastMessageShort().second
-            )
+        else -> ChatItem(
+            id = id,
+            avatar = null,
+            initials = "",
+            title = title,
+            shortDescription = lastMessageShort().first,
+            messageCount = unreadableMessageCount(),
+            lastMessageDate = lastMessageDate()?.shortFormat(),
+            isOnline = false,
+            chatType = ChatType.GROUP,
+            author = lastMessageShort().second
+        )
     }
 }
 
