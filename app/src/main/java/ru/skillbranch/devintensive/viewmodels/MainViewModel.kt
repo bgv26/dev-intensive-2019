@@ -18,7 +18,7 @@ class MainViewModel : ViewModel() {
     }
 
     private val archiveChats = Transformations.map(chatRepository.loadChats()) { chats ->
-        return@map chats.filter { it.isArchived }.map { it.toChatItem() }
+        return@map chats.filter { it.isArchived }.sortedBy { it.lastMessageDate() }.map { it.toChatItem() }
     }
 
     fun getChatData(): LiveData<List<ChatItem>> {
