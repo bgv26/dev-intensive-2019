@@ -22,6 +22,12 @@ fun Context.getColorAccent(): Int {
     return typedValue.data
 }
 
+fun Context.resolveColor(colorInt: Int): Int {
+    val typedValue = TypedValue()
+    theme.resolveAttribute(colorInt, typedValue, true)
+    return typedValue.data
+}
+
 fun Context.getTextAvatar(text:String): Drawable {
     val size = resources.getDimensionPixelSize(R.dimen.avatar_round_size)
     val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
