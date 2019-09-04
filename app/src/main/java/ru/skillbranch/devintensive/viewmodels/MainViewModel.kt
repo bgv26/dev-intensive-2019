@@ -10,6 +10,7 @@ import ru.skillbranch.devintensive.models.data.ChatType
 import ru.skillbranch.devintensive.repositories.ChatRepository
 
 class MainViewModel : ViewModel() {
+    private var lastId: MutableList<String> = mutableListOf()
     private val query = mutableLiveData("")
     private val chatRepository = ChatRepository
 
@@ -18,7 +19,7 @@ class MainViewModel : ViewModel() {
     }
 
     private val archiveChats = Transformations.map(chatRepository.loadChats()) { chats ->
-        return@map chats.filter { it.isArchived }.sortedBy { it.lastMessageDate() }.map { it.toChatItem() }
+        return@map chats.filter { it.isArchived }.map { it.toChatItem() }
     }
 
     fun getChatData(): LiveData<List<ChatItem>> {
@@ -29,7 +30,7 @@ class MainViewModel : ViewModel() {
             val chats: MutableList<ChatItem> = mutableListOf()
             if (!archiveChats.value.isNullOrEmpty()) {
                 chats.add(
-                    archiveChats.value!!.last().copy(
+                    archiveChats.value!!.find { it.id == lastId[lastId.lastIndex] }!!.copy(
                         chatType = ChatType.ARCHIVE,
                         messageCount = archiveChats.value!!.sumBy { it.messageCount })
                 )
@@ -51,12 +52,14 @@ class MainViewModel : ViewModel() {
     fun addToArchive(chatId: String) {
         val chat = chatRepository.find(chatId)
         chat ?: return
+        lastId.add(chat.id)
         chatRepository.update(chat.copy(isArchived = true))
     }
 
     fun restoreFromArchive(chatId: String) {
         val chat = chatRepository.find(chatId)
         chat ?: return
+        lastId.removeAt(lastId.lastIndex)
         chatRepository.update(chat.copy(isArchived = false))
     }
 
