@@ -53,7 +53,8 @@ data class Chat(
                 shortDescription = lastMessageShort().first,
                 messageCount = unreadableMessageCount(),
                 lastMessageDate = lastMessageDate()?.shortFormat(),
-                isOnline = user.isOnline
+                isOnline = user.isOnline,
+                author = user.firstName ?: ""
             )
         }
         else-> ChatItem(
