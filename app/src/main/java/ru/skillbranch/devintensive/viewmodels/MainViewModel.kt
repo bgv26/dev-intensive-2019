@@ -23,14 +23,6 @@ class MainViewModel : ViewModel() {
             .sortedBy { it.id.toInt() }
     }
 
-    private val nonArchiveChats = Transformations.map(chatRepository.loadChats()) { chats ->
-        return@map chats.filter { !it.isArchived }.map { it.toChatItem() }.sortedBy { it.id.toInt() }
-    }
-
-    private val archiveChats = Transformations.map(chatRepository.loadChats()) { chats ->
-        return@map Chat.archivedToChatItem(chats.filter { it.isArchived })
-    }
-
     fun getChatData(): LiveData<List<ChatItem>> {
         val result = MediatorLiveData<List<ChatItem>>()
 
@@ -52,8 +44,6 @@ class MainViewModel : ViewModel() {
 
         return result
     }
-
-    fun getArchiveData(): LiveData<ChatItem> = archiveChats
 
     fun addToArchive(chatId: String) {
         val chat = chatRepository.find(chatId)

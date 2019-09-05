@@ -29,21 +29,24 @@ data class Chat(
     }
 
     companion object {
-        fun archivedToChatItem(chats:List<Chat>):ChatItem {
-            val lastChat = chats.filter { it.lastMessageDate() != null }.sortedBy { it.lastMessageDate() }.last()
+        fun archivedToChatItem(chats: List<Chat>): ChatItem {
+            val lastChat =
+                if (chats.none { it.unreadableMessageCount() > 0 }) chats.last() else
+                    chats.filter { it.unreadableMessageCount() > 0 }.maxBy { it.lastMessageDate()!! }!!
             return ChatItem(
-                id = lastChat.id,
+                id = "-1",
                 initials = "",
-                title = lastChat.title,
+                title = "Архив чатов",
                 avatar = null,
                 shortDescription = lastChat.lastMessageShort().first,
                 lastMessageDate = lastChat.lastMessageDate()?.shortFormat(),
                 messageCount = chats.sumBy { it.unreadableMessageCount() },
                 chatType = ChatType.ARCHIVE,
                 author = lastChat.lastMessageShort().second
-                )
+            )
         }
     }
+
     private fun isSingle(): Boolean = members.size == 1
 
     fun toChatItem(): ChatItem = when {
