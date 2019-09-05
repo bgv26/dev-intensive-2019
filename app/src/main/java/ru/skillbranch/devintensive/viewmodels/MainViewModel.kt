@@ -36,7 +36,7 @@ class MainViewModel : ViewModel() {
             chatList.addAll(chats.value!!.filter { it.chatType != ChatType.ARCHIVE })
 
             result.value = if (queryStr.isEmpty()) chatList
-            else chatList.filter { it.chatType != ChatType.ARCHIVE && it.title.contains(queryStr, true) }
+            else chatList.filter { it.title.contains(queryStr, true) }
         }
 
         result.addSource(chats) { filterF.invoke() }
