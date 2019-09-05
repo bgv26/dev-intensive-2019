@@ -19,15 +19,31 @@ data class Chat(
     fun unreadableMessageCount(): Int = messages.count { !it.isReaded }
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    fun lastMessageDate(): Date? = messages.maxBy { it.date }?.date
+    fun lastMessageDate(): Date? = messages.lastOrNull()?.date
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    fun lastMessageShort(): Pair<String, String?> = when (val lastMessage = messages.maxBy { it.date }) {
+    fun lastMessageShort(): Pair<String, String?> = when (val lastMessage = messages.lastOrNull()) {
         is TextMessage -> (lastMessage.text ?: "") to lastMessage.from.firstName
         is ImageMessage -> "${lastMessage.from.firstName} - отправил фото" to lastMessage.from.firstName
         else -> "Неподдерживаемый тип сообщения" to lastMessage?.from?.firstName
     }
 
+    companion object {
+        fun archivedToChatItem(chats:List<Chat>):ChatItem {
+            val lastChat = chats.filter { it.lastMessageDate() != null }.sortedBy { it.lastMessageDate() }.last()
+            return ChatItem(
+                id = lastChat.id,
+                initials = "",
+                title = "",
+                avatar = null,
+                shortDescription = lastChat.lastMessageShort().first,
+                lastMessageDate = lastChat.lastMessageDate()?.shortFormat(),
+                messageCount = chats.sumBy { it.unreadableMessageCount() },
+                chatType = ChatType.ARCHIVE,
+                author = lastChat.lastMessageShort().second
+                )
+        }
+    }
     private fun isSingle(): Boolean = members.size == 1
 
     fun toChatItem(): ChatItem = when {
