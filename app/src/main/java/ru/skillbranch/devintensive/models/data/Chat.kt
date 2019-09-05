@@ -34,7 +34,7 @@ data class Chat(
             return ChatItem(
                 id = lastChat.id,
                 initials = "",
-                title = "",
+                title = lastChat.title,
                 avatar = null,
                 shortDescription = lastChat.lastMessageShort().first,
                 lastMessageDate = lastChat.lastMessageDate()?.shortFormat(),
