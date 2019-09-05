@@ -15,12 +15,18 @@ class MainViewModel : ViewModel() {
     private val chatRepository = ChatRepository
 
     private val chats = Transformations.map(chatRepository.loadChats()) { chats ->
-        return@map chats.groupBy { it.isArchived }
-            .flatMap { (isArchived, chats) ->
-                if (isArchived) listOf(Chat.archivedToChatItem(chats))
-                else chats.map { it.toChatItem() }
-            }
-            .sortedBy { it.id.toInt() }
+        val result: MutableList<ChatItem> = mutableListOf()
+        val sortedChats = chats.groupBy { it.isArchived }
+        val archivedChats = sortedChats[true]
+        if (!archivedChats.isNullOrEmpty()) result.add(Chat.archivedToChatItem(archivedChats))
+        result.addAll(sortedChats[false]!!.map { it.toChatItem() }.sortedBy { it.id.toInt() })
+        return@map result.toList()
+//        return@map chats.groupBy { it.isArchived }
+//            .flatMap { (isArchived, chats) ->
+//                if (isArchived) listOf(Chat.archivedToChatItem(chats))
+//                else chats.map { it.toChatItem() }
+//            }
+//            .sortedBy { it.id.toInt() }
     }
 
     fun getChatData(): LiveData<List<ChatItem>> {
@@ -28,12 +34,13 @@ class MainViewModel : ViewModel() {
 
         val filterF = {
             val queryStr = query.value!!
-            val chatList: MutableList<ChatItem> = mutableListOf()
-            val archiveItem = chats.value!!.find {it.chatType == ChatType.ARCHIVE}
-            if ( archiveItem != null) {
-                chatList.add(archiveItem)
-            }
-            chatList.addAll(chats.value!!.filter { it.chatType != ChatType.ARCHIVE })
+            val chatList = chats.value!!
+//            val chatList: MutableList<ChatItem> = mutableListOf()
+//            val archiveItem = chats.value!!.find {it.chatType == ChatType.ARCHIVE}
+//            if ( archiveItem != null) {
+//                chatList.add(archiveItem)
+//            }
+//            chatList.addAll(chats.value!!.filter { it.chatType != ChatType.ARCHIVE })
 
             result.value = if (queryStr.isEmpty()) chatList
             else chatList.filter { it.title.contains(queryStr, true) }
