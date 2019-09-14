@@ -13,7 +13,7 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_archive.*
 import kotlinx.android.synthetic.main.activity_main.toolbar
 import ru.skillbranch.devintensive.R
-import ru.skillbranch.devintensive.extensions.resolveColor
+import ru.skillbranch.devintensive.extensions.resolveColorByTheme
 import ru.skillbranch.devintensive.ui.adapters.ChatAdapter
 import ru.skillbranch.devintensive.ui.adapters.ChatItemTouchHelperCallback
 import ru.skillbranch.devintensive.viewmodels.ArchiveViewModel
@@ -50,9 +50,9 @@ class ArchiveActivity : AppCompatActivity() {
         chatAdapter = ChatAdapter {
             val snackbar = Snackbar.make(rv_archive_list, "Click on ${it.title}", Snackbar.LENGTH_LONG)
             with(snackbar.view) {
-                setBackgroundColor(resolveColor(R.attr.colorSnackbarBackground))
+                setBackgroundColor(resolveColorByTheme(R.attr.colorSnackbarBackground))
                 val textView = findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
-                textView.setTextColor(resolveColor(R.attr.colorSnackbarTextColor))
+                textView.setTextColor(resolveColorByTheme(R.attr.colorSnackbarTextColor))
             }
             snackbar.show()
         }
@@ -68,9 +68,9 @@ class ArchiveActivity : AppCompatActivity() {
                 )
             snackbar.setAction(R.string.archive_undo_string) { viewModel.addToArchive(item.id) }
             with(snackbar.view) {
-                setBackgroundColor(resolveColor(R.attr.colorSnackbarBackground))
+                setBackgroundColor(resolveColorByTheme(R.attr.colorSnackbarBackground))
                 val textView = findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
-                textView.setTextColor(resolveColor(R.attr.colorSnackbarTextColor))
+                textView.setTextColor(resolveColorByTheme(R.attr.colorSnackbarTextColor))
             }
             snackbar.show()
         }

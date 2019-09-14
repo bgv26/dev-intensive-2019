@@ -14,8 +14,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_profile.*
 import ru.skillbranch.devintensive.R
-import ru.skillbranch.devintensive.extensions.getColorAccent
 import ru.skillbranch.devintensive.extensions.getTextAvatar
+import ru.skillbranch.devintensive.extensions.resolveColorByTheme
 import ru.skillbranch.devintensive.models.Profile
 import ru.skillbranch.devintensive.utils.Utils.toInitials
 import ru.skillbranch.devintensive.utils.Utils.validateURL
@@ -100,8 +100,7 @@ class ProfileActivity : AppCompatActivity() {
 
         with(btn_edit) {
             val filter: ColorFilter? = if (isEdit) {
-                val color = getColorAccent()
-                PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN)
+                PorterDuffColorFilter(resolveColorByTheme(R.attr.colorAccent), PorterDuff.Mode.SRC_IN)
             } else {
                 null
             }

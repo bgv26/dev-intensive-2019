@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.skillbranch.devintensive.R
-import ru.skillbranch.devintensive.extensions.resolveColor
+import ru.skillbranch.devintensive.extensions.resolveColorByTheme
 import ru.skillbranch.devintensive.models.data.ChatType
 import ru.skillbranch.devintensive.ui.adapters.ChatAdapter
 import ru.skillbranch.devintensive.ui.adapters.ChatItemTouchHelperCallback
@@ -63,9 +63,9 @@ class MainActivity : AppCompatActivity() {
         chatAdapter = ChatAdapter {
             val snackbar = Snackbar.make(rv_chat_list, "Click on ${it.title}", Snackbar.LENGTH_LONG)
             with(snackbar.view){
-                setBackgroundColor(resolveColor(R.attr.colorSnackbarBackground))
+                setBackgroundColor(resolveColorByTheme(R.attr.colorSnackbarBackground))
                 val textView =  findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
-                textView.setTextColor(resolveColor(R.attr.colorSnackbarTextColor))
+                textView.setTextColor(resolveColorByTheme(R.attr.colorSnackbarTextColor))
             }
             snackbar.show()
             if (it.chatType == ChatType.ARCHIVE) {
@@ -81,9 +81,9 @@ class MainActivity : AppCompatActivity() {
                 Snackbar.make(rv_chat_list, "Вы точно хотите добавить ${item.title} в архив?", Snackbar.LENGTH_LONG)
             snackbar.setAction(R.string.archive_undo_string) { viewModel.restoreFromArchive(item.id) }
             with(snackbar.view){
-                setBackgroundColor(resolveColor(R.attr.colorSnackbarBackground))
+                setBackgroundColor(resolveColorByTheme(R.attr.colorSnackbarBackground))
                 val textView =  findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
-                textView.setTextColor(resolveColor(R.attr.colorSnackbarTextColor))
+                textView.setTextColor(resolveColorByTheme(R.attr.colorSnackbarTextColor))
             }
             snackbar.show()
         }

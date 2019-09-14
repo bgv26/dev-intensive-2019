@@ -16,13 +16,7 @@ fun Context.convertDpToPx(dp: Float): Float =
 fun Context.convertSpToPx(sp: Float): Float =
     TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp, resources.displayMetrics)
 
-fun Context.getColorAccent(): Int {
-    val typedValue = TypedValue()
-    theme.resolveAttribute(R.attr.colorAccent, typedValue, true)
-    return typedValue.data
-}
-
-fun Context.resolveColor(colorInt: Int): Int {
+fun Context.resolveColorByTheme(colorInt: Int): Int {
     val typedValue = TypedValue()
     theme.resolveAttribute(colorInt, typedValue, true)
     return typedValue.data
@@ -39,7 +33,7 @@ fun Context.getTextAvatar(text:String): Drawable {
 
     val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     paint.style = Paint.Style.FILL
-    paint.color = getColorAccent()
+    paint.color = resolveColorByTheme(R.attr.colorAccent)
 
     c.drawPaint(paint)
 

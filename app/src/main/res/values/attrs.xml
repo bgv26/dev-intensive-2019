@@ -7,11 +7,13 @@
     <declare-styleable name="CircleImageView">
         <attr name="cv_borderColor" format="color"/>
         <attr name="cv_borderWidth" format="dimension"/>
+        <attr name="cv_fontSize" format="dimension"/>
     </declare-styleable>
 
     <declare-styleable name="AvatarImageView">
-        <attr name="aiv_borderColor" format="color"/>
-        <attr name="aiv_borderWidth" format="dimension"/>
+        <attr name="borderColor" format="color"/>
+        <attr name="borderWidth" format="dimension"/>
+        <attr name="fontSize" format="dimension"/>
     </declare-styleable>
 
     <attr name="colorAccentedSurface" format="reference"/>

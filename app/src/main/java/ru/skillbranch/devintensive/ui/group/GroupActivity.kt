@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.chip.Chip
 import kotlinx.android.synthetic.main.activity_group.*
 import ru.skillbranch.devintensive.R
-import ru.skillbranch.devintensive.extensions.resolveColor
+import ru.skillbranch.devintensive.extensions.resolveColorByTheme
 import ru.skillbranch.devintensive.models.data.UserItem
 import ru.skillbranch.devintensive.ui.adapters.UserAdapter
 import ru.skillbranch.devintensive.viewmodels.GroupViewModel
@@ -105,8 +105,8 @@ class GroupActivity : AppCompatActivity() {
             isCloseIconVisible = true
             tag = user.id
             isClickable = true
-            closeIconTint = ColorStateList.valueOf(resolveColor(R.attr.colorChipButtonBackground))
-            chipBackgroundColor = ColorStateList.valueOf(resolveColor(R.attr.colorChipBackground))
+            closeIconTint = ColorStateList.valueOf(resolveColorByTheme(R.attr.colorChipButtonBackground))
+            chipBackgroundColor = ColorStateList.valueOf(resolveColorByTheme(R.attr.colorChipBackground))
             setTextColor(Color.WHITE)
         }
         chip.setOnCloseIconClickListener { viewModel.handleRemoveChip(it.tag.toString()) }

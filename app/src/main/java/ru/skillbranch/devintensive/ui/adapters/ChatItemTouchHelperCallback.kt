@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import ru.skillbranch.devintensive.models.data.ChatItem
 import ru.skillbranch.devintensive.R
-import ru.skillbranch.devintensive.extensions.resolveColor
+import ru.skillbranch.devintensive.extensions.resolveColorByTheme
 
 class ChatItemTouchHelperCallback(
     val adapter: ChatAdapter,
@@ -76,7 +76,7 @@ class ChatItemTouchHelperCallback(
             bottom= itemView.bottom.toFloat()
         }
         with(bgPaint){
-            color = itemView.context.resolveColor(R.attr.colorSwipeBackground)
+            color = itemView.context.resolveColorByTheme(R.attr.colorSwipeBackground)
         }
         canvas.drawRect(bgRect, bgPaint)
     }

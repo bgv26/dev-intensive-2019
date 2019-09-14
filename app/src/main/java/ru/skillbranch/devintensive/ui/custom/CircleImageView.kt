@@ -14,7 +14,7 @@ import ru.skillbranch.devintensive.R
 import kotlin.math.min
 import kotlin.math.roundToInt
 
-class CircleImageView @JvmOverloads constructor(
+open class CircleImageView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
@@ -33,8 +33,8 @@ class CircleImageView @JvmOverloads constructor(
     private var mBorderPaint: Paint
     private var mBitmapPaint: Paint
     private var mShaderMatrix: Matrix
-    private var mBorderColor = DEFAULT_BORDER_COLOR
-    private var mBorderWidth = DEFAULT_BORDER_WIDTH
+    internal var mBorderColor = DEFAULT_BORDER_COLOR
+    internal var mBorderWidth = DEFAULT_BORDER_WIDTH
 
     init {
         if (attrs != null) {
