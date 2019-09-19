@@ -16,7 +16,7 @@ import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.models.data.ChatItem
 import ru.skillbranch.devintensive.models.data.ChatType
 
-class ChatAdapter(val listener: (ChatItem) -> Unit) : RecyclerView.Adapter<ChatAdapter.ChatItemViewHolder>() {
+class ChatAdapter(private val listener: (ChatItem) -> Unit) : RecyclerView.Adapter<ChatAdapter.ChatItemViewHolder>() {
     companion object {
         private const val ARCHIVE_TYPE = 0
         private const val SINGLE_TYPE = 1
@@ -43,7 +43,6 @@ class ChatAdapter(val listener: (ChatItem) -> Unit) : RecyclerView.Adapter<ChatA
     override fun getItemCount(): Int = items.size
 
     override fun onBindViewHolder(holder: ChatItemViewHolder, position: Int) {
-        Log.d("M_ChatAdapter", "onBindViewHolder $position")
         holder.bind(items[position], listener)
     }
 
@@ -166,7 +165,6 @@ class ChatAdapter(val listener: (ChatItem) -> Unit) : RecyclerView.Adapter<ChatA
 
             tv_message_archive.text = item.shortDescription
             with(tv_message_author_archive) {
-//                visibility = if (item.messageCount > 0) View.VISIBLE else View.GONE
                 text = resources.getString(R.string.archive_author_string, item.author)
             }
 

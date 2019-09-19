@@ -22,14 +22,12 @@ open class CircleImageView @JvmOverloads constructor(
     companion object {
         private const val DEFAULT_BORDER_COLOR = Color.WHITE
         private const val DEFAULT_BORDER_WIDTH = 2f
-        private val BITMAP_CONFIG = Bitmap.Config.ARGB_8888
-        private val SCALE_TYPE = ScaleType.CENTER_CROP
     }
 
     private var mBitmapShader: BitmapShader? = null
     private var mBitmap: Bitmap? = null
     private var mBorderBounds: RectF
-    private var mBitmapDrawBounds: RectF
+    private var mBitmapBounds: RectF
     private var mBorderPaint: Paint
     private var mBitmapPaint: Paint
     private var mShaderMatrix: Matrix
@@ -38,17 +36,17 @@ open class CircleImageView @JvmOverloads constructor(
 
     init {
         if (attrs != null) {
-            val a = context.obtainStyledAttributes(attrs, R.styleable.CircleImageView, 0, 0)
+            val typedArray = context.obtainStyledAttributes(attrs, R.styleable.CircleImageView, 0, 0)
 
-            mBorderColor = a.getColor(R.styleable.CircleImageView_cv_borderColor, DEFAULT_BORDER_COLOR)
-            mBorderWidth = a.getDimension(R.styleable.CircleImageView_cv_borderWidth, DEFAULT_BORDER_WIDTH)
+            mBorderColor = typedArray.getColor(R.styleable.CircleImageView_cv_borderColor, DEFAULT_BORDER_COLOR)
+            mBorderWidth = typedArray.getDimension(R.styleable.CircleImageView_cv_borderWidth, DEFAULT_BORDER_WIDTH)
 
-            a.recycle()
+            typedArray.recycle()
         }
 
         mShaderMatrix = Matrix()
         mBorderBounds = RectF()
-        mBitmapDrawBounds = RectF()
+        mBitmapBounds = RectF()
         mBitmapPaint = Paint(Paint.ANTI_ALIAS_FLAG)
         mBorderPaint = Paint(Paint.ANTI_ALIAS_FLAG)
 
@@ -78,10 +76,9 @@ open class CircleImageView @JvmOverloads constructor(
     override fun onSizeChanged(width: Int, height: Int, oldWidth: Int, oldHeight: Int) {
         super.onSizeChanged(width, height, oldWidth, oldHeight)
 
-        val halfBorderWidth = mBorderPaint.strokeWidth / 2f
-        updateCircleDrawBounds(mBitmapDrawBounds)
-        mBorderBounds.set(mBitmapDrawBounds)
-        mBorderBounds.inset(halfBorderWidth, halfBorderWidth)
+        updateCircleDrawBounds(mBitmapBounds)
+        mBorderBounds.set(mBitmapBounds)
+        mBorderBounds.inset(mBorderWidth, mBorderWidth)
 
         updateBitmap()
     }
@@ -112,34 +109,35 @@ open class CircleImageView @JvmOverloads constructor(
         mBorderColor = resources.getColor(colorId, context.theme)
     }
 
-    private fun drawBorder(canvas: Canvas) {
-        if (mBorderPaint.strokeWidth > 0f) {
+    internal fun drawBorder(canvas: Canvas) {
+        if (mBorderWidth > 0f) {
+            with(mBorderPaint) {
+                color = mBorderColor
+                style = Paint.Style.STROKE
+                strokeWidth = mBorderWidth
+            }
             canvas.drawOval(mBorderBounds, mBorderPaint)
         }
     }
 
     private fun drawBitmap(canvas: Canvas) {
-        canvas.drawOval(mBitmapDrawBounds, mBitmapPaint)
+        canvas.drawOval(mBitmapBounds, mBitmapPaint)
     }
 
     private fun updateCircleDrawBounds(bounds: RectF) {
-        val contentWidth = (width - paddingLeft - paddingRight).toFloat()
-        val contentHeight = (height - paddingTop - paddingBottom).toFloat()
-
-        var left = paddingLeft.toFloat()
-        var top = paddingTop.toFloat()
-        if (contentWidth > contentHeight) {
-            left += (contentWidth - contentHeight) / 2f
-        } else {
-            top += (contentHeight - contentWidth) / 2f
-        }
+        val contentWidth = width - paddingLeft - paddingRight
+        val contentHeight = height - paddingTop - paddingBottom
 
         val diameter = min(contentWidth, contentHeight)
+
+        val left = paddingLeft + (contentWidth - diameter) / 2f
+        val top = paddingTop + (contentHeight - diameter) / 2f
+
         bounds.set(left, top, left + diameter, top + diameter)
     }
 
     private fun setupBitmap() {
-        super.setScaleType(SCALE_TYPE)
+        scaleType = ScaleType.CENTER_CROP
 
         mBitmap = getBitmapFromDrawable(drawable)
         if (mBitmap == null) {
@@ -159,44 +157,42 @@ open class CircleImageView @JvmOverloads constructor(
         val dy: Float
         val scale: Float
 
-        mBorderPaint.color = mBorderColor
-        mBorderPaint.style = Paint.Style.STROKE
-        mBorderPaint.strokeWidth = mBorderWidth
-
         // scale up/down with respect to this view size and maintain aspect ratio
         // translate bitmap position with dx/dy to the center of the image
         if (mBitmap!!.width < mBitmap!!.height) {
-            scale = mBitmapDrawBounds.width() / mBitmap!!.width
-            dx = mBitmapDrawBounds.left
-            dy = mBitmapDrawBounds.top - mBitmap!!.height * scale / 2f + mBitmapDrawBounds.width() / 2f
+            scale = mBitmapBounds.width() / mBitmap!!.width
+            dx = mBitmapBounds.left
+            dy = mBitmapBounds.top - mBitmap!!.height * scale / 2f + mBitmapBounds.height() / 2f
         } else {
-            scale = mBitmapDrawBounds.height() / mBitmap!!.height
-            dx = mBitmapDrawBounds.left - mBitmap!!.width * scale / 2f + mBitmapDrawBounds.width() / 2f
-            dy = mBitmapDrawBounds.top
+            scale = mBitmapBounds.height() / mBitmap!!.height
+            dx = mBitmapBounds.left - mBitmap!!.width * scale / 2f + mBitmapBounds.width() / 2f
+            dy = mBitmapBounds.top
         }
-        mShaderMatrix.setScale(scale, scale)
-        mShaderMatrix.postTranslate(dx, dy)
+
+        with(mShaderMatrix) {
+            setScale(scale, scale)
+            mShaderMatrix.postTranslate(dx, dy)
+        }
         mBitmapShader?.setLocalMatrix(mShaderMatrix)
     }
 
-    private fun getBitmapFromDrawable(drawable: Drawable?): Bitmap? {
-        if (drawable == null) {
-            return null
+    private fun getBitmapFromDrawable(drawable: Drawable?): Bitmap? = when (drawable) {
+        null -> null
+
+        is BitmapDrawable -> drawable.bitmap
+
+        else -> {
+            val bitmap = Bitmap.createBitmap(
+                drawable.intrinsicWidth,
+                drawable.intrinsicHeight,
+                Bitmap.Config.ARGB_8888
+            )
+
+            val canvas = Canvas(bitmap)
+            drawable.setBounds(0, 0, canvas.width, canvas.height)
+            drawable.draw(canvas)
+
+            bitmap
         }
-
-        if (drawable is BitmapDrawable) {
-            return drawable.bitmap
-        }
-
-        val bitmap = Bitmap.createBitmap(
-            drawable.intrinsicWidth,
-            drawable.intrinsicHeight,
-            BITMAP_CONFIG
-        )
-        val canvas = Canvas(bitmap)
-        drawable.setBounds(0, 0, canvas.width, canvas.height)
-        drawable.draw(canvas)
-
-        return bitmap
     }
 }
