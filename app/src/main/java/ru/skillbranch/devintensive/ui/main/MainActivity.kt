@@ -8,7 +8,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
@@ -19,6 +18,7 @@ import ru.skillbranch.devintensive.models.data.ChatType
 import ru.skillbranch.devintensive.ui.adapters.ChatAdapter
 import ru.skillbranch.devintensive.ui.adapters.ChatItemTouchHelperCallback
 import ru.skillbranch.devintensive.ui.archive.ArchiveActivity
+import ru.skillbranch.devintensive.ui.custom.ItemDecorationWithLeftMargin
 import ru.skillbranch.devintensive.ui.group.GroupActivity
 import ru.skillbranch.devintensive.viewmodels.MainViewModel
 
@@ -62,9 +62,9 @@ class MainActivity : AppCompatActivity() {
     private fun initViews() {
         chatAdapter = ChatAdapter {
             val snackbar = Snackbar.make(rv_chat_list, "Click on ${it.title}", Snackbar.LENGTH_LONG)
-            with(snackbar.view){
+            with(snackbar.view) {
                 setBackgroundColor(resolveColorByTheme(R.attr.colorSnackbarBackground))
-                val textView =  findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
+                val textView = findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
                 textView.setTextColor(resolveColorByTheme(R.attr.colorSnackbarTextColor))
             }
             snackbar.show()
@@ -73,16 +73,16 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
             }
         }
-        val divider = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
+        val divider = ItemDecorationWithLeftMargin(this, resources.getDimensionPixelSize(R.dimen.item_size))
         val touchCallback = ChatItemTouchHelperCallback(chatAdapter) {
             val item = it
             viewModel.addToArchive(item.id)
             val snackbar =
                 Snackbar.make(rv_chat_list, "Вы точно хотите добавить ${item.title} в архив?", Snackbar.LENGTH_LONG)
             snackbar.setAction(R.string.archive_undo_string) { viewModel.restoreFromArchive(item.id) }
-            with(snackbar.view){
+            with(snackbar.view) {
                 setBackgroundColor(resolveColorByTheme(R.attr.colorSnackbarBackground))
-                val textView =  findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
+                val textView = findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
                 textView.setTextColor(resolveColorByTheme(R.attr.colorSnackbarTextColor))
             }
             snackbar.show()

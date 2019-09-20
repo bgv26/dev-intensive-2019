@@ -4,14 +4,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/item_size"
                 android:padding="@dimen/spacing_normal_16"
-                android:background="?android:attr/colorBackground">
+                android:background="?android:attr/colorBackground"
+                tools:ignore="SmallSp,ContentDescription">
 
     <ImageView
             android:id="@+id/iv_avatar_archive"
             android:layout_width="@dimen/avatar_item_size"
             android:layout_height="@dimen/avatar_item_size"
-            android:layout_marginRight="@dimen/spacing_normal_16"
-            android:layout_alignParentLeft="true"
+            android:layout_marginEnd="@dimen/spacing_normal_16"
+            android:layout_alignParentStart="true"
             android:padding="@dimen/spacing_small_8"
             android:background="@drawable/archive_avatar_bg"
             android:src="@drawable/ic_archive_black_24dp"/>
@@ -25,9 +26,9 @@
             android:textColor="?android:attr/colorPrimary"
             android:fontFamily="sans-serif-medium"
             android:textSize="14sp"
-            android:layout_toRightOf="@id/iv_avatar_archive"
-            android:layout_toLeftOf="@id/tv_date_group"
-            android:layout_marginRight="@dimen/spacing_normal_16"/>
+            android:layout_toEndOf="@id/iv_avatar_archive"
+            android:layout_toStartOf="@id/tv_date_archive"
+            android:layout_marginEnd="@dimen/spacing_normal_16"/>
 
     <TextView
             android:id="@+id/tv_message_author_archive"
@@ -37,8 +38,8 @@
             android:textColor="?android:attr/colorPrimary"
             android:textSize="14sp"
             android:layout_below="@id/tv_title_archive"
-            android:layout_toRightOf="@id/iv_avatar_archive"
-            android:layout_marginRight="@dimen/spacing_tiny_4"
+            android:layout_toEndOf="@id/iv_avatar_archive"
+            android:layout_marginEnd="@dimen/spacing_tiny_4"
             tools:visibility="visible"/>
 
     <TextView
@@ -49,14 +50,14 @@
             android:textColor="?attr/colorMessage"
             android:textSize="14sp"
             android:layout_below="@id/tv_title_archive"
-            android:layout_toRightOf="@id/tv_message_author_archive"
-            android:layout_marginRight="@dimen/spacing_normal_16"/>
+            android:layout_toEndOf="@id/tv_message_author_archive"
+            android:layout_marginEnd="@dimen/spacing_normal_16"/>
 
     <TextView
             android:id="@+id/tv_date_archive"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
             android:textColor="?attr/colorMessage"
             android:textSize="10sp"
@@ -67,7 +68,7 @@
             android:layout_width="wrap_content"
             android:minWidth="@dimen/counter_size"
             android:layout_height="@dimen/counter_size"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             android:gravity="center"
             android:background="@drawable/bg_counter"

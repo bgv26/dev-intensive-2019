@@ -6,7 +6,6 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
@@ -16,6 +15,7 @@ import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.extensions.resolveColorByTheme
 import ru.skillbranch.devintensive.ui.adapters.ChatAdapter
 import ru.skillbranch.devintensive.ui.adapters.ChatItemTouchHelperCallback
+import ru.skillbranch.devintensive.ui.custom.ItemDecorationWithLeftMargin
 import ru.skillbranch.devintensive.viewmodels.ArchiveViewModel
 
 class ArchiveActivity : AppCompatActivity() {
@@ -56,7 +56,7 @@ class ArchiveActivity : AppCompatActivity() {
             }
             snackbar.show()
         }
-        val divider = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
+        val divider = ItemDecorationWithLeftMargin(this, resources.getDimensionPixelSize(R.dimen.item_size))
         val touchCallback = ChatItemTouchHelperCallback(chatAdapter) {
             val item = it
             viewModel.restoreFromArchive(item.id)

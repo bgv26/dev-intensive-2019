@@ -12,8 +12,8 @@ import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.extensions.resolveColorByTheme
 
 class ChatItemTouchHelperCallback(
-    val adapter: ChatAdapter,
-    val swipeListener: (ChatItem) -> Unit
+    private val adapter: ChatAdapter,
+    private val swipeListener: (ChatItem) -> Unit
 ) : ItemTouchHelper.Callback() {
     private val bgRect = RectF()
     private val bgPaint = Paint(Paint.ANTI_ALIAS_FLAG)

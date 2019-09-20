@@ -13,7 +13,6 @@
     <declare-styleable name="AvatarImageView">
         <attr name="borderColor" format="color"/>
         <attr name="borderWidth" format="dimension"/>
-        <attr name="fontSize" format="dimension"/>
     </declare-styleable>
 
     <attr name="colorAccentedSurface" format="reference"/>

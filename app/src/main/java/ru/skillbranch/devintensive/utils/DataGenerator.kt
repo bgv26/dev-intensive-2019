@@ -391,7 +391,7 @@ object DataGenerator {
         return list
     }
 
-    public fun generateChats(count: Int, hasGroups: Boolean = false): List<Chat> {
+    fun generateChats(count: Int, hasGroups: Boolean = false): List<Chat> {
         val list = mutableListOf<Chat>()
         val users = generateUsers(count)
         for (user in users) {
@@ -419,7 +419,7 @@ object DataGenerator {
         return list
     }
 
-    public fun generateChatsWithOffset(startId: Int, count: Int): List<Chat> {
+    fun generateChatsWithOffset(startId: Int, count: Int): List<Chat> {
         val list = mutableListOf<Chat>()
         val users = generateUsers(count)
         for (user in users) {
@@ -465,13 +465,13 @@ object DataGenerator {
     }
 
     private fun randomUser(users: List<User>): User {
-        val rndInd = (0 until users.size).random()
+        val rndInd = users.indices.random()
         return users[rndInd]
     }
 
     private fun <T> List<T>.random(includeNull: Boolean = false): T? {
         return if (includeNull && Random.nextBoolean()) null
-        else this[(0 until this.size).random()]
+        else this[this.indices.random()]
     }
 
     private fun <T> List<T>.randomSublist(maxCount: Int, minCount: Int = 1): List<T> {

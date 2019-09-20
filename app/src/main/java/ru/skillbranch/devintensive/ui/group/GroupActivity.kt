@@ -11,7 +11,6 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.view.children
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.chip.Chip
 import kotlinx.android.synthetic.main.activity_group.*
@@ -19,6 +18,7 @@ import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.extensions.resolveColorByTheme
 import ru.skillbranch.devintensive.models.data.UserItem
 import ru.skillbranch.devintensive.ui.adapters.UserAdapter
+import ru.skillbranch.devintensive.ui.custom.ItemDecorationWithLeftMargin
 import ru.skillbranch.devintensive.viewmodels.GroupViewModel
 
 class GroupActivity : AppCompatActivity() {
@@ -54,7 +54,7 @@ class GroupActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return if(item?.itemId == android.R.id.home) {
+        return if (item?.itemId == android.R.id.home) {
             finish()
             overridePendingTransition(R.anim.idle, R.anim.bottom_down)
             true
@@ -70,7 +70,7 @@ class GroupActivity : AppCompatActivity() {
 
     private fun initViews() {
         userAdapter = UserAdapter { viewModel.handleSelectedItem(it.id) }
-        val divider = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
+        val divider = ItemDecorationWithLeftMargin(this, resources.getDimensionPixelSize(R.dimen.item_size))
         with(rv_user_list) {
             adapter = userAdapter
             layoutManager = LinearLayoutManager(this@GroupActivity)
@@ -94,7 +94,7 @@ class GroupActivity : AppCompatActivity() {
     }
 
     private fun toggleFab(isShow: Boolean) {
-        if(isShow) fab.show()
+        if (isShow) fab.show()
         else fab.hide()
     }
 
